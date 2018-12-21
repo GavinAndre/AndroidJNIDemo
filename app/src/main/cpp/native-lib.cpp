@@ -1,9 +1,7 @@
 #include "native-lib.h"
-#include <string>
-#include <iostream>
-#include "android_buf.h"
+#include "jni_lib.hpp"
 #include "android_log.h"
-#include "jni_lib.h"
+#include "android_buf.hpp"
 
 using namespace std;
 
@@ -20,7 +18,7 @@ Java_com_gavinandre_jnidemo_NativeLib_disableCout(JNIEnv *env, jclass type) {
 JNIEXPORT jstring JNICALL
 Java_com_gavinandre_jnidemo_NativeLib_stringFromJNI(JNIEnv *env, jclass type) {
     std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+    return string_to_jstring(env, hello);
 }
 
 JNIEXPORT void JNICALL
