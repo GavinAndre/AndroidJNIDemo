@@ -30,7 +30,7 @@ Java_com_gavinandre_jnidemo_NativeLib_stringToJNI(JNIEnv *env, jclass type, jstr
 
 JNIEXPORT void JNICALL
 Java_com_gavinandre_jnidemo_NativeLib_listToJNI(JNIEnv *env, jclass type, jobject array_list) {
-    std::vector<std::string> result = java2cpp(env, array_list);
+    std::vector<std::string> result = array_list_to_vector(env, array_list);
     for (std::string s: result) {
         cout << s << endl;
     }
@@ -43,5 +43,5 @@ Java_com_gavinandre_jnidemo_NativeLib_listFromJNI(JNIEnv *env, jclass type) {
     v_s.emplace_back("3");
     v_s.emplace_back("2");
     v_s.emplace_back("1");
-    return cpp2java(env, v_s);
+    return vector_to_array_list(env, v_s);
 }

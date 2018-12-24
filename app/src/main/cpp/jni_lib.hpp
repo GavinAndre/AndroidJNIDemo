@@ -13,7 +13,7 @@ std::string jstring_to_string(JNIEnv *env, jstring j_str) {
     return c_str;
 }
 
-std::vector<std::string> java2cpp(JNIEnv *env, jobject arrayList) {
+std::vector<std::string> array_list_to_vector(JNIEnv *env, jobject arrayList) {
     jclass java_util_ArrayList = static_cast<jclass>(env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
     jmethodID java_util_ArrayList_size = env->GetMethodID(java_util_ArrayList, "size", "()I");
     jmethodID java_util_ArrayList_get = env->GetMethodID(java_util_ArrayList, "get", "(I)Ljava/lang/Object;");
@@ -32,7 +32,7 @@ std::vector<std::string> java2cpp(JNIEnv *env, jobject arrayList) {
     return result;
 }
 
-jobject cpp2java(JNIEnv *env, std::vector<std::string> vector) {
+jobject vector_to_array_list(JNIEnv *env, std::vector<std::string> vector) {
     jclass java_util_ArrayList = static_cast<jclass>(env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
     jmethodID java_util_ArrayList_ = env->GetMethodID(java_util_ArrayList, "<init>", "(I)V");
     jmethodID java_util_ArrayList_add = env->GetMethodID(java_util_ArrayList, "add", "(Ljava/lang/Object;)Z");
