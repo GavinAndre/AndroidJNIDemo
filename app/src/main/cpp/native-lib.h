@@ -39,6 +39,22 @@ JNIEXPORT jstring JNICALL Java_com_gavinandre_jnidemo_NativeLib_stringFromJNI
 JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_stringToJNI
   (JNIEnv *, jclass, jstring);
 
+/*
+ * Class:     com_gavinandre_jnidemo_NativeLib
+ * Method:    listToJNI
+ * Signature: (Ljava/util/ArrayList;)V
+ */
+JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_listToJNI
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_gavinandre_jnidemo_NativeLib
+ * Method:    listFromJNI
+ * Signature: ()Ljava/util/ArrayList;
+ */
+JNIEXPORT jobject JNICALL Java_com_gavinandre_jnidemo_NativeLib_listFromJNI
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

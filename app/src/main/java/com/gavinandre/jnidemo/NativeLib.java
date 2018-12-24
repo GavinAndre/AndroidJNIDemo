@@ -1,5 +1,7 @@
 package com.gavinandre.jnidemo;
 
+import java.util.ArrayList;
+
 public class NativeLib {
 
     static {
@@ -13,6 +15,10 @@ public class NativeLib {
     public static native String stringFromJNI();
 
     public static native void stringToJNI(String string);
+
+    public static native void listToJNI(ArrayList list);
+
+    public static native ArrayList listFromJNI();
 
 }
 
