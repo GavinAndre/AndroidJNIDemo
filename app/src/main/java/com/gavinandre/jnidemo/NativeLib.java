@@ -18,7 +18,7 @@ public class NativeLib {
 
     public static native void listToJNI(ArrayList list);
 
-    public static native ArrayList listFromJNI();
+    public static native ArrayList<String> listFromJNI();
 
 }
 
