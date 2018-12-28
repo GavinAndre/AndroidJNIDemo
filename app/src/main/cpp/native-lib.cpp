@@ -2,6 +2,7 @@
 #include "jni_lib.hpp"
 #include "android_log.h"
 #include "android_buf.hpp"
+#include "uuid_lib.hpp"
 
 using namespace std;
 
@@ -44,4 +45,10 @@ Java_com_gavinandre_jnidemo_NativeLib_listFromJNI(JNIEnv *env, jclass type) {
     v_s.emplace_back("2");
     v_s.emplace_back("1");
     return vector_to_array_list(env, v_s);
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_uuidFromJNI(JNIEnv *env, jclass type) {
+    std::string uuid = generate_hex(16);
+    return string_to_jstring(env, uuid);
 }

@@ -24,6 +24,10 @@ class MainActivity : AppCompatActivity() {
 
         Log.i(TAG, "onCreate: listFromJni: $list2")
 
+        val uuid = NativeLib.uuidFromJNI()
+
+        Log.i(TAG, "onCreate: uuidFromJNI: $uuid")
+
         NativeLib.disableCout()
     }
 }

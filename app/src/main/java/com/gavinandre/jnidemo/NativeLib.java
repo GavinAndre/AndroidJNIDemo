@@ -20,6 +20,8 @@ public class NativeLib {
 
     public static native ArrayList<String> listFromJNI();
 
+    public static native String uuidFromJNI();
+
 }
 
 
