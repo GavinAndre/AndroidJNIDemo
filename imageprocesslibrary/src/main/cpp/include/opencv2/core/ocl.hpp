@@ -59,7 +59,7 @@ CV_EXPORTS_W void finish();
 CV_EXPORTS bool haveSVM();
 
 class CV_EXPORTS Context;
-class CV_EXPORTS Device;
+class CV_EXPORTS_W_SIMPLE Device;
 class CV_EXPORTS Kernel;
 class CV_EXPORTS Program;
 class CV_EXPORTS ProgramSource;
@@ -67,14 +67,14 @@ class CV_EXPORTS Queue;
 class CV_EXPORTS PlatformInfo;
 class CV_EXPORTS Image2D;
 
-class CV_EXPORTS Device
+class CV_EXPORTS_W_SIMPLE Device
 {
 public:
-    Device();
+    CV_WRAP Device();
     explicit Device(void* d);
     Device(const Device& d);
     Device& operator = (const Device& d);
-    ~Device();
+    CV_WRAP ~Device();
 
     void set(void* d);
 
@@ -89,24 +89,24 @@ public:
         TYPE_ALL         = 0xFFFFFFFF
     };
 
-    String name() const;
-    String extensions() const;
-    bool isExtensionSupported(const String& extensionName) const;
-    String version() const;
-    String vendorName() const;
-    String OpenCL_C_Version() const;
-    String OpenCLVersion() const;
-    int deviceVersionMajor() const;
-    int deviceVersionMinor() const;
-    String driverVersion() const;
+    CV_WRAP String name() const;
+    CV_WRAP String extensions() const;
+    CV_WRAP bool isExtensionSupported(const String& extensionName) const;
+    CV_WRAP String version() const;
+    CV_WRAP String vendorName() const;
+    CV_WRAP String OpenCL_C_Version() const;
+    CV_WRAP String OpenCLVersion() const;
+    CV_WRAP int deviceVersionMajor() const;
+    CV_WRAP int deviceVersionMinor() const;
+    CV_WRAP String driverVersion() const;
     void* ptr() const;
 
-    int type() const;
+    CV_WRAP int type() const;
 
-    int addressBits() const;
-    bool available() const;
-    bool compilerAvailable() const;
-    bool linkerAvailable() const;
+    CV_WRAP int addressBits() const;
+    CV_WRAP bool available() const;
+    CV_WRAP bool compilerAvailable() const;
+    CV_WRAP bool linkerAvailable() const;
 
     enum
     {
@@ -119,21 +119,21 @@ public:
         FP_SOFT_FLOAT=(1 << 6),
         FP_CORRECTLY_ROUNDED_DIVIDE_SQRT=(1 << 7)
     };
-    int doubleFPConfig() const;
-    int singleFPConfig() const;
-    int halfFPConfig() const;
+    CV_WRAP int doubleFPConfig() const;
+    CV_WRAP int singleFPConfig() const;
+    CV_WRAP int halfFPConfig() const;
 
-    bool endianLittle() const;
-    bool errorCorrectionSupport() const;
+    CV_WRAP bool endianLittle() const;
+    CV_WRAP bool errorCorrectionSupport() const;
 
     enum
     {
         EXEC_KERNEL=(1 << 0),
         EXEC_NATIVE_KERNEL=(1 << 1)
     };
-    int executionCapabilities() const;
+    CV_WRAP int executionCapabilities() const;
 
-    size_t globalMemCacheSize() const;
+    CV_WRAP size_t globalMemCacheSize() const;
 
     enum
     {
@@ -141,38 +141,38 @@ public:
         READ_ONLY_CACHE=1,
         READ_WRITE_CACHE=2
     };
-    int globalMemCacheType() const;
-    int globalMemCacheLineSize() const;
-    size_t globalMemSize() const;
+    CV_WRAP int globalMemCacheType() const;
+    CV_WRAP int globalMemCacheLineSize() const;
+    CV_WRAP size_t globalMemSize() const;
 
-    size_t localMemSize() const;
+    CV_WRAP size_t localMemSize() const;
     enum
     {
         NO_LOCAL_MEM=0,
         LOCAL_IS_LOCAL=1,
         LOCAL_IS_GLOBAL=2
     };
-    int localMemType() const;
-    bool hostUnifiedMemory() const;
+    CV_WRAP int localMemType() const;
+    CV_WRAP bool hostUnifiedMemory() const;
 
-    bool imageSupport() const;
+    CV_WRAP bool imageSupport() const;
 
-    bool imageFromBufferSupport() const;
+    CV_WRAP bool imageFromBufferSupport() const;
     uint imagePitchAlignment() const;
     uint imageBaseAddressAlignment() const;
 
     /// deprecated, use isExtensionSupported() method (probably with "cl_khr_subgroups" value)
-    bool intelSubgroupsSupport() const;
+    CV_WRAP bool intelSubgroupsSupport() const;
 
-    size_t image2DMaxWidth() const;
-    size_t image2DMaxHeight() const;
+    CV_WRAP size_t image2DMaxWidth() const;
+    CV_WRAP size_t image2DMaxHeight() const;
 
-    size_t image3DMaxWidth() const;
-    size_t image3DMaxHeight() const;
-    size_t image3DMaxDepth() const;
+    CV_WRAP size_t image3DMaxWidth() const;
+    CV_WRAP size_t image3DMaxHeight() const;
+    CV_WRAP size_t image3DMaxDepth() const;
 
-    size_t imageMaxBufferSize() const;
-    size_t imageMaxArraySize() const;
+    CV_WRAP size_t imageMaxBufferSize() const;
+    CV_WRAP size_t imageMaxArraySize() const;
 
     enum
     {
@@ -181,53 +181,53 @@ public:
         VENDOR_INTEL=2,
         VENDOR_NVIDIA=3
     };
-    int vendorID() const;
+    CV_WRAP int vendorID() const;
     // FIXIT
     // dev.isAMD() doesn't work for OpenCL CPU devices from AMD OpenCL platform.
     // This method should use platform name instead of vendor name.
     // After fix restore code in arithm.cpp: ocl_compare()
-    inline bool isAMD() const { return vendorID() == VENDOR_AMD; }
-    inline bool isIntel() const { return vendorID() == VENDOR_INTEL; }
-    inline bool isNVidia() const { return vendorID() == VENDOR_NVIDIA; }
+    CV_WRAP inline bool isAMD() const { return vendorID() == VENDOR_AMD; }
+    CV_WRAP inline bool isIntel() const { return vendorID() == VENDOR_INTEL; }
+    CV_WRAP inline bool isNVidia() const { return vendorID() == VENDOR_NVIDIA; }
 
-    int maxClockFrequency() const;
-    int maxComputeUnits() const;
-    int maxConstantArgs() const;
-    size_t maxConstantBufferSize() const;
+    CV_WRAP int maxClockFrequency() const;
+    CV_WRAP int maxComputeUnits() const;
+    CV_WRAP int maxConstantArgs() const;
+    CV_WRAP size_t maxConstantBufferSize() const;
 
-    size_t maxMemAllocSize() const;
-    size_t maxParameterSize() const;
+    CV_WRAP size_t maxMemAllocSize() const;
+    CV_WRAP size_t maxParameterSize() const;
 
-    int maxReadImageArgs() const;
-    int maxWriteImageArgs() const;
-    int maxSamplers() const;
+    CV_WRAP int maxReadImageArgs() const;
+    CV_WRAP int maxWriteImageArgs() const;
+    CV_WRAP int maxSamplers() const;
 
-    size_t maxWorkGroupSize() const;
-    int maxWorkItemDims() const;
+    CV_WRAP size_t maxWorkGroupSize() const;
+    CV_WRAP int maxWorkItemDims() const;
     void maxWorkItemSizes(size_t*) const;
 
-    int memBaseAddrAlign() const;
+    CV_WRAP int memBaseAddrAlign() const;
 
-    int nativeVectorWidthChar() const;
-    int nativeVectorWidthShort() const;
-    int nativeVectorWidthInt() const;
-    int nativeVectorWidthLong() const;
-    int nativeVectorWidthFloat() const;
-    int nativeVectorWidthDouble() const;
-    int nativeVectorWidthHalf() const;
+    CV_WRAP int nativeVectorWidthChar() const;
+    CV_WRAP int nativeVectorWidthShort() const;
+    CV_WRAP int nativeVectorWidthInt() const;
+    CV_WRAP int nativeVectorWidthLong() const;
+    CV_WRAP int nativeVectorWidthFloat() const;
+    CV_WRAP int nativeVectorWidthDouble() const;
+    CV_WRAP int nativeVectorWidthHalf() const;
 
-    int preferredVectorWidthChar() const;
-    int preferredVectorWidthShort() const;
-    int preferredVectorWidthInt() const;
-    int preferredVectorWidthLong() const;
-    int preferredVectorWidthFloat() const;
-    int preferredVectorWidthDouble() const;
-    int preferredVectorWidthHalf() const;
+    CV_WRAP int preferredVectorWidthChar() const;
+    CV_WRAP int preferredVectorWidthShort() const;
+    CV_WRAP int preferredVectorWidthInt() const;
+    CV_WRAP int preferredVectorWidthLong() const;
+    CV_WRAP int preferredVectorWidthFloat() const;
+    CV_WRAP int preferredVectorWidthDouble() const;
+    CV_WRAP int preferredVectorWidthHalf() const;
 
-    size_t printfBufferSize() const;
-    size_t profilingTimerResolution() const;
+    CV_WRAP size_t printfBufferSize() const;
+    CV_WRAP size_t profilingTimerResolution() const;
 
-    static const Device& getDefault();
+    CV_WRAP static const Device& getDefault();
 
 protected:
     struct Impl;
@@ -261,6 +261,8 @@ public:
     void setUseSVM(bool enabled);
 
     struct Impl;
+    inline Impl* getImpl() const { return (Impl*)p; }
+//protected:
     Impl* p;
 };
 
@@ -350,7 +352,8 @@ public:
     KernelArg(int _flags, UMat* _m, int wscale=1, int iwscale=1, const void* _obj=0, size_t _sz=0);
     KernelArg();
 
-    static KernelArg Local() { return KernelArg(LOCAL, 0); }
+    static KernelArg Local(size_t localMemSize)
+    { return KernelArg(LOCAL, 0, 1, 1, 0, localMemSize); }
     static KernelArg PtrWriteOnly(const UMat& m)
     { return KernelArg(PTR_ONLY+WRITE_ONLY, (UMat*)&m); }
     static KernelArg PtrReadOnly(const UMat& m)
@@ -604,20 +607,33 @@ public:
 
     bool create(const ProgramSource& src,
                 const String& buildflags, String& errmsg);
-    bool read(const String& buf, const String& buildflags);
-    bool write(String& buf) const;
 
-    const ProgramSource& source() const;
     void* ptr() const;
 
-    String getPrefix() const;
-    static String getPrefix(const String& buildflags);
+    /**
+     * @brief Query device-specific program binary.
+     *
+     * Returns RAW OpenCL executable binary without additional attachments.
+     *
+     * @sa ProgramSource::fromBinary
+     *
+     * @param[out] binary output buffer
+     */
+    void getBinary(std::vector<char>& binary) const;
 
-
-    struct Impl;
+    struct Impl; friend struct Impl;
     inline Impl* getImpl() const { return (Impl*)p; }
 protected:
     Impl* p;
+public:
+#ifndef OPENCV_REMOVE_DEPRECATED_API
+    // TODO Remove this
+    CV_DEPRECATED bool read(const String& buf, const String& buildflags); // removed, use ProgramSource instead
+    CV_DEPRECATED bool write(String& buf) const; // removed, use getBinary() method instead (RAW OpenCL binary)
+    CV_DEPRECATED const ProgramSource& source() const; // implementation removed
+    CV_DEPRECATED String getPrefix() const; // deprecated, implementation replaced
+    CV_DEPRECATED static String getPrefix(const String& buildflags); // deprecated, implementation replaced
+#endif
 };
 
 
@@ -634,10 +650,59 @@ public:
     ProgramSource(const ProgramSource& prog);
     ProgramSource& operator = (const ProgramSource& prog);
 
-    const String& source() const;
+    const String& source() const; // deprecated
     hash_t hash() const; // deprecated
 
-    struct Impl;
+
+    /** @brief Describe OpenCL program binary.
+     * Do not call clCreateProgramWithBinary() and/or clBuildProgram().
+     *
+     * Caller should guarantee binary buffer lifetime greater than ProgramSource object (and any of its copies).
+     *
+     * This kind of binary is not portable between platforms in general - it is specific to OpenCL vendor / device / driver version.
+     *
+     * @param module name of program owner module
+     * @param name unique name of program (module+name is used as key for OpenCL program caching)
+     * @param binary buffer address. See buffer lifetime requirement in description.
+     * @param size buffer size
+     * @param buildOptions additional program-related build options passed to clBuildProgram()
+     * @return created ProgramSource object
+     */
+    static ProgramSource fromBinary(const String& module, const String& name,
+            const unsigned char* binary, const size_t size,
+            const cv::String& buildOptions = cv::String());
+
+    /** @brief Describe OpenCL program in SPIR format.
+     * Do not call clCreateProgramWithBinary() and/or clBuildProgram().
+     *
+     * Supports SPIR 1.2 by default (pass '-spir-std=X.Y' in buildOptions to override this behavior)
+     *
+     * Caller should guarantee binary buffer lifetime greater than ProgramSource object (and any of its copies).
+     *
+     * Programs in this format are portable between OpenCL implementations with 'khr_spir' extension:
+     * https://www.khronos.org/registry/OpenCL/sdk/2.0/docs/man/xhtml/cl_khr_spir.html
+     * (but they are not portable between different platforms: 32-bit / 64-bit)
+     *
+     * Note: these programs can't support vendor specific extensions, like 'cl_intel_subgroups'.
+     *
+     * @param module name of program owner module
+     * @param name unique name of program (module+name is used as key for OpenCL program caching)
+     * @param binary buffer address. See buffer lifetime requirement in description.
+     * @param size buffer size
+     * @param buildOptions additional program-related build options passed to clBuildProgram()
+     *        (these options are added automatically: '-x spir' and '-spir-std=1.2')
+     * @return created ProgramSource object.
+     */
+    static ProgramSource fromSPIR(const String& module, const String& name,
+            const unsigned char* binary, const size_t size,
+            const cv::String& buildOptions = cv::String());
+
+    //OpenCL 2.1+ only
+    //static Program fromSPIRV(const String& module, const String& name,
+    //        const unsigned char* binary, const size_t size,
+    //        const cv::String& buildOptions = cv::String());
+
+    struct Impl; friend struct Impl;
     inline Impl* getImpl() const { return (Impl*)p; }
 protected:
     Impl* p;

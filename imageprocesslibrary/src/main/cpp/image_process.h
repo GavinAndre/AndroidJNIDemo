@@ -9,9 +9,10 @@
 #include <android/log.h>
 #include <android/bitmap.h>
 #include <opencv2/opencv.hpp>
-#include "base64.h"
+#include <opencv2/imgcodecs/imgcodecs_c.h>
 #include <string>
 #include <vector>
+#include "base64.h"
 
 #define  LOG_TAG    "LibImageProcess"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)

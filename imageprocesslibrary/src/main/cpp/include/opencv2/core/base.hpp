@@ -271,7 +271,7 @@ enum BorderTypes {
     BORDER_REFLECT     = 2, //!< `fedcba|abcdefgh|hgfedcb`
     BORDER_WRAP        = 3, //!< `cdefgh|abcdefgh|abcdefg`
     BORDER_REFLECT_101 = 4, //!< `gfedcb|abcdefgh|gfedcba`
-    BORDER_TRANSPARENT = 5, //!< `uvwxyz|absdefgh|ijklmno`
+    BORDER_TRANSPARENT = 5, //!< `uvwxyz|abcdefgh|ijklmno`
 
     BORDER_REFLECT101  = BORDER_REFLECT_101, //!< same as BORDER_REFLECT_101
     BORDER_DEFAULT     = BORDER_REFLECT_101, //!< same as BORDER_REFLECT_101
@@ -283,68 +283,6 @@ enum BorderTypes {
 //! @addtogroup core_utils
 //! @{
 
-//! @cond IGNORED
-
-//////////////// static assert /////////////////
-#define CVAUX_CONCAT_EXP(a, b) a##b
-#define CVAUX_CONCAT(a, b) CVAUX_CONCAT_EXP(a,b)
-
-#if defined(__clang__)
-#  ifndef __has_extension
-#    define __has_extension __has_feature /* compatibility, for older versions of clang */
-#  endif
-#  if __has_extension(cxx_static_assert)
-#    define CV_StaticAssert(condition, reason)    static_assert((condition), reason " " #condition)
-#  elif __has_extension(c_static_assert)
-#    define CV_StaticAssert(condition, reason)    _Static_assert((condition), reason " " #condition)
-#  endif
-#elif defined(__GNUC__)
-#  if (defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
-#    define CV_StaticAssert(condition, reason)    static_assert((condition), reason " " #condition)
-#  endif
-#elif defined(_MSC_VER)
-#  if _MSC_VER >= 1600 /* MSVC 10 */
-#    define CV_StaticAssert(condition, reason)    static_assert((condition), reason " " #condition)
-#  endif
-#endif
-#ifndef CV_StaticAssert
-#  if !defined(__clang__) && defined(__GNUC__) && (__GNUC__*100 + __GNUC_MINOR__ > 302)
-#    define CV_StaticAssert(condition, reason) ({ extern int __attribute__((error("CV_StaticAssert: " reason " " #condition))) CV_StaticAssert(); ((condition) ? 0 : CV_StaticAssert()); })
-#  else
-     template <bool x> struct CV_StaticAssert_failed;
-     template <> struct CV_StaticAssert_failed<true> { enum { val = 1 }; };
-     template<int x> struct CV_StaticAssert_test {};
-#    define CV_StaticAssert(condition, reason)\
-       typedef cv::CV_StaticAssert_test< sizeof(cv::CV_StaticAssert_failed< static_cast<bool>(condition) >) > CVAUX_CONCAT(CV_StaticAssert_failed_at_, __LINE__)
-#  endif
-#endif
-
-// Suppress warning "-Wdeprecated-declarations" / C4996
-#if defined(_MSC_VER)
-    #define CV_DO_PRAGMA(x) __pragma(x)
-#elif defined(__GNUC__)
-    #define CV_DO_PRAGMA(x) _Pragma (#x)
-#else
-    #define CV_DO_PRAGMA(x)
-#endif
-
-#ifdef _MSC_VER
-#define CV_SUPPRESS_DEPRECATED_START \
-    CV_DO_PRAGMA(warning(push)) \
-    CV_DO_PRAGMA(warning(disable: 4996))
-#define CV_SUPPRESS_DEPRECATED_END CV_DO_PRAGMA(warning(pop))
-#elif defined (__clang__) || ((__GNUC__)  && (__GNUC__*100 + __GNUC_MINOR__ > 405))
-#define CV_SUPPRESS_DEPRECATED_START \
-    CV_DO_PRAGMA(GCC diagnostic push) \
-    CV_DO_PRAGMA(GCC diagnostic ignored "-Wdeprecated-declarations")
-#define CV_SUPPRESS_DEPRECATED_END CV_DO_PRAGMA(GCC diagnostic pop)
-#else
-#define CV_SUPPRESS_DEPRECATED_START
-#define CV_SUPPRESS_DEPRECATED_END
-#endif
-#define CV_UNUSED(name) (void)name
-//! @endcond
-
 /*! @brief Signals an error and raises the exception.
 
 By default the function prints information about the error to stderr,
@@ -355,7 +293,7 @@ It is possible to alternate error processing by using redirectError().
 @param _func - function name. Available only when the compiler supports getting it
 @param _file - source file name where the error has occurred
 @param _line - line number in the source file where the error has occurred
-@see CV_Error, CV_Error_, CV_ErrorNoReturn, CV_ErrorNoReturn_, CV_Assert, CV_DbgAssert
+@see CV_Error, CV_Error_, CV_Assert, CV_DbgAssert
  */
 CV_EXPORTS void error(int _code, const String& _err, const char* _func, const char* _file, int _line);
 
@@ -384,22 +322,15 @@ CV_INLINE CV_NORETURN void errorNoReturn(int _code, const String& _err, const ch
 # endif
 #endif
 
-#if defined __GNUC__
-#define CV_Func __func__
-#elif defined _MSC_VER
-#define CV_Func __FUNCTION__
-#else
-#define CV_Func ""
-#endif
-
 #ifdef CV_STATIC_ANALYSIS
+
 // In practice, some macro are not processed correctly (noreturn is not detected).
 // We need to use simplified definition for them.
 #define CV_Error(...) do { abort(); } while (0)
-#define CV_Error_(...) do { abort(); } while (0)
-#define CV_Assert(cond) do { if (!(cond)) abort(); } while (0)
-#define CV_ErrorNoReturn(...) do { abort(); } while (0)
-#define CV_ErrorNoReturn_(...) do { abort(); } while (0)
+#define CV_Error_( code, args ) do { cv::format args; abort(); } while (0)
+#define CV_Assert( expr ) do { if (!(expr)) abort(); } while (0)
+#define CV_ErrorNoReturn CV_Error
+#define CV_ErrorNoReturn_ CV_Error_
 
 #else // CV_STATIC_ANALYSIS
 
@@ -421,7 +352,7 @@ This macro can be used to construct an error message on-fly to include some dyna
 for example:
 @code
     // note the extra parentheses around the formatted text message
-    CV_Error_( CV_StsOutOfRange,
+    CV_Error_(Error::StsOutOfRange,
     ("the value at (%d, %d)=%g is out of range", badPt.x, badPt.y, badValue));
 @endcode
 @param code one of Error::Code
@@ -435,11 +366,39 @@ The macros CV_Assert (and CV_DbgAssert(expr)) evaluate the specified expression.
 raise an error (see cv::error). The macro CV_Assert checks the condition in both Debug and Release
 configurations while CV_DbgAssert is only retained in the Debug configuration.
 */
+#define CV_Assert( expr ) do { if(!!(expr)) ; else cv::error( cv::Error::StsAssert, #expr, CV_Func, __FILE__, __LINE__ ); } while(0)
 
-#define CV_VA_NUM_ARGS_HELPER(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, N, ...)    N
-#define CV_VA_NUM_ARGS(...)      CV_VA_NUM_ARGS_HELPER(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+//! @cond IGNORED
+#define CV__ErrorNoReturn( code, msg ) cv::errorNoReturn( code, msg, CV_Func, __FILE__, __LINE__ )
+#define CV__ErrorNoReturn_( code, args ) cv::errorNoReturn( code, cv::format args, CV_Func, __FILE__, __LINE__ )
+#ifdef __OPENCV_BUILD
+#undef CV_Error
+#define CV_Error CV__ErrorNoReturn
+#undef CV_Error_
+#define CV_Error_ CV__ErrorNoReturn_
+#undef CV_Assert
+#define CV_Assert( expr ) do { if(!!(expr)) ; else cv::errorNoReturn( cv::Error::StsAssert, #expr, CV_Func, __FILE__, __LINE__ ); } while(0)
+#else
+// backward compatibility
+#define CV_ErrorNoReturn CV__ErrorNoReturn
+#define CV_ErrorNoReturn_ CV__ErrorNoReturn_
+#endif
+//! @endcond
 
-#define CV_Assert_1( expr ) if(!!(expr)) ; else cv::error( cv::Error::StsAssert, #expr, CV_Func, __FILE__, __LINE__ )
+#endif // CV_STATIC_ANALYSIS
+
+//! @cond IGNORED
+
+#if defined OPENCV_FORCE_MULTIARG_ASSERT_CHECK && defined CV_STATIC_ANALYSIS
+#warning "OPENCV_FORCE_MULTIARG_ASSERT_CHECK can't be used with CV_STATIC_ANALYSIS"
+#undef OPENCV_FORCE_MULTIARG_ASSERT_CHECK
+#endif
+
+#ifdef OPENCV_FORCE_MULTIARG_ASSERT_CHECK
+#define CV_Assert_1( expr ) do { if(!!(expr)) ; else cv::error( cv::Error::StsAssert, #expr, CV_Func, __FILE__, __LINE__ ); } while(0)
+#else
+#define CV_Assert_1 CV_Assert
+#endif
 #define CV_Assert_2( expr1, expr2 ) CV_Assert_1(expr1); CV_Assert_1(expr2)
 #define CV_Assert_3( expr1, expr2, expr3 ) CV_Assert_2(expr1, expr2); CV_Assert_1(expr3)
 #define CV_Assert_4( expr1, expr2, expr3, expr4 ) CV_Assert_3(expr1, expr2, expr3); CV_Assert_1(expr4)
@@ -450,20 +409,18 @@ configurations while CV_DbgAssert is only retained in the Debug configuration.
 #define CV_Assert_9( expr1, expr2, expr3, expr4, expr5, expr6, expr7, expr8, expr9 ) CV_Assert_8(expr1, expr2, expr3, expr4, expr5, expr6, expr7, expr8 ); CV_Assert_1(expr9)
 #define CV_Assert_10( expr1, expr2, expr3, expr4, expr5, expr6, expr7, expr8, expr9, expr10 ) CV_Assert_9(expr1, expr2, expr3, expr4, expr5, expr6, expr7, expr8, expr9 ); CV_Assert_1(expr10)
 
-#define CV_Assert(...)               CVAUX_CONCAT(CV_Assert_, CV_VA_NUM_ARGS(__VA_ARGS__)) (__VA_ARGS__)
+#define CV_Assert_N(...) do { __CV_CAT(CV_Assert_, __CV_VA_NUM_ARGS(__VA_ARGS__)) (__VA_ARGS__); } while(0)
 
-/** same as CV_Error(code,msg), but does not return */
-#define CV_ErrorNoReturn( code, msg ) cv::errorNoReturn( code, msg, CV_Func, __FILE__, __LINE__ )
+#ifdef OPENCV_FORCE_MULTIARG_ASSERT_CHECK
+#undef CV_Assert
+#define CV_Assert CV_Assert_N
+#endif
+//! @endcond
 
-/** same as CV_Error_(code,args), but does not return */
-#define CV_ErrorNoReturn_( code, args ) cv::errorNoReturn( code, cv::format args, CV_Func, __FILE__, __LINE__ )
-
-#endif // CV_STATIC_ANALYSIS
-
-/** replaced with CV_Assert(expr) in Debug configuration */
-#ifdef _DEBUG
+#if defined _DEBUG || defined CV_STATIC_ANALYSIS
 #  define CV_DbgAssert(expr) CV_Assert(expr)
 #else
+/** replaced with CV_Assert(expr) in Debug configuration */
 #  define CV_DbgAssert(expr)
 #endif
 
@@ -724,9 +681,13 @@ CV_EXPORTS_W void   setUseIPP(bool flag);
 CV_EXPORTS_W String getIppVersion();
 
 // IPP Not-Exact mode. This function may force use of IPP then both IPP and OpenCV provide proper results
-// but have internal accuracy differences which have to much direct or indirect impact on accuracy tests.
+// but have internal accuracy differences which have too much direct or indirect impact on accuracy tests.
+CV_EXPORTS_W bool useIPP_NotExact();
+CV_EXPORTS_W void setUseIPP_NotExact(bool flag);
+#if OPENCV_ABI_COMPATIBILITY < 400
 CV_EXPORTS_W bool useIPP_NE();
 CV_EXPORTS_W void setUseIPP_NE(bool flag);
+#endif
 
 } // ipp
 
@@ -741,5 +702,6 @@ CV_EXPORTS_W void setUseIPP_NE(bool flag);
 
 #include "opencv2/core/neon_utils.hpp"
 #include "opencv2/core/vsx_utils.hpp"
+#include "opencv2/core/check.hpp"
 
 #endif //OPENCV_CORE_BASE_HPP

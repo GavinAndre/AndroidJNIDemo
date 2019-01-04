@@ -66,13 +66,14 @@ namespace cv
 ////////////////////////////// Small Matrix ///////////////////////////
 
 //! @cond IGNORED
-struct CV_EXPORTS Matx_AddOp {};
-struct CV_EXPORTS Matx_SubOp {};
-struct CV_EXPORTS Matx_ScaleOp {};
-struct CV_EXPORTS Matx_MulOp {};
-struct CV_EXPORTS Matx_DivOp {};
-struct CV_EXPORTS Matx_MatMulOp {};
-struct CV_EXPORTS Matx_TOp {};
+// FIXIT Remove this (especially CV_EXPORTS modifier)
+struct CV_EXPORTS Matx_AddOp { Matx_AddOp() {} Matx_AddOp(const Matx_AddOp&) {} };
+struct CV_EXPORTS Matx_SubOp { Matx_SubOp() {} Matx_SubOp(const Matx_SubOp&) {} };
+struct CV_EXPORTS Matx_ScaleOp { Matx_ScaleOp() {} Matx_ScaleOp(const Matx_ScaleOp&) {} };
+struct CV_EXPORTS Matx_MulOp { Matx_MulOp() {} Matx_MulOp(const Matx_MulOp&) {} };
+struct CV_EXPORTS Matx_DivOp { Matx_DivOp() {} Matx_DivOp(const Matx_DivOp&) {} };
+struct CV_EXPORTS Matx_MatMulOp { Matx_MatMulOp() {} Matx_MatMulOp(const Matx_MatMulOp&) {} };
+struct CV_EXPORTS Matx_TOp { Matx_TOp() {} Matx_TOp(const Matx_TOp&) {} };
 //! @endcond
 
 /** @brief Template class for small matrices whose type and size are known at compilation time
@@ -92,7 +93,7 @@ Except of the plain constructor which takes a list of elements, Matx can be init
     float values[] = { 1, 2, 3};
     Matx31f m(values);
 @endcode
-In case if C++11 features are avaliable, std::initializer_list can be also used to initizlize Matx:
+In case if C++11 features are available, std::initializer_list can be also used to initialize Matx:
 @code{.cpp}
     Matx31f m = { 1, 2, 3};
 @endcode
@@ -118,7 +119,7 @@ public:
     //! default constructor
     Matx();
 
-    Matx(_Tp v0); //!< 1x1 matrix
+    explicit Matx(_Tp v0); //!< 1x1 matrix
     Matx(_Tp v0, _Tp v1); //!< 1x2 or 2x1 matrix
     Matx(_Tp v0, _Tp v1, _Tp v2); //!< 1x3 or 3x1 matrix
     Matx(_Tp v0, _Tp v1, _Tp v2, _Tp v3); //!< 1x4, 2x2 or 4x1 matrix
