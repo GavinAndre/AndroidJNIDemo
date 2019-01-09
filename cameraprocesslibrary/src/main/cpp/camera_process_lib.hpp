@@ -15,16 +15,6 @@ cv::Mat frame;
 
 V4LAchieve *oV4LAchieve;
 
-bool initFaceAnalyzer(JNIEnv *env) {
-    std::string sd_path = callJavaStaticMethod(env,
-                                               "com/gavinandre/cameraprocesslibrary/utils/CameraProcessUtil",
-                                               "getSDPath", "()Ljava/lang/String;");
-    std::string relativeModulePath = "/Modules/FaceAnalyzer";
-    std::string module_path = sd_path + relativeModulePath;
-    LOGI("initFaceAnalyzer: %s", module_path.c_str());
-    return true;
-}
-
 int prepareSystemCamera(int width, int height) {
     LOGE("prepareSystemCamera");
     IMG_WIDTH = width;

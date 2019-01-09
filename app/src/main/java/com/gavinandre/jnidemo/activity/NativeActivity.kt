@@ -33,7 +33,11 @@ class NativeActivity : AppCompatActivity() {
 
         Log.i(TAG, "onCreate: uuidFromJNI: $uuid")
 
-        val s = FileUtil.getInstance().sdPath + "/cat.png"
+        val sdPath = NativeLib.getSDPath()
+
+        Log.i(TAG, "onCreate: getSDPath: $sdPath")
+
+        val s = FileUtil.getSDPath() + "/cat.png"
         Log.i(TAG, "onCreate: $s")
         val encodeImageData = ImageProcess.Encode(s)
         Log.i(TAG, "onCreate: $encodeImageData")

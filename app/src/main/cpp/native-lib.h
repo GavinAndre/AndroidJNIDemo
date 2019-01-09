@@ -13,7 +13,7 @@ extern "C" {
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_enableCout
-        (JNIEnv *, jclass);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_gavinandre_jnidemo_NativeLib
@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_enableCout
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_disableCout
-        (JNIEnv *, jclass);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_gavinandre_jnidemo_NativeLib
@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_disableCout
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_gavinandre_jnidemo_NativeLib_stringFromJNI
-        (JNIEnv *, jclass);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_gavinandre_jnidemo_NativeLib
@@ -37,7 +37,7 @@ JNIEXPORT jstring JNICALL Java_com_gavinandre_jnidemo_NativeLib_stringFromJNI
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_stringToJNI
-        (JNIEnv *, jclass, jstring);
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     com_gavinandre_jnidemo_NativeLib
@@ -45,7 +45,7 @@ JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_stringToJNI
  * Signature: (Ljava/util/ArrayList;)V
  */
 JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_listToJNI
-        (JNIEnv *, jclass, jobject);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     com_gavinandre_jnidemo_NativeLib
@@ -53,7 +53,7 @@ JNIEXPORT void JNICALL Java_com_gavinandre_jnidemo_NativeLib_listToJNI
  * Signature: ()Ljava/util/ArrayList;
  */
 JNIEXPORT jobject JNICALL Java_com_gavinandre_jnidemo_NativeLib_listFromJNI
-        (JNIEnv *, jclass);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_gavinandre_jnidemo_NativeLib
@@ -61,6 +61,14 @@ JNIEXPORT jobject JNICALL Java_com_gavinandre_jnidemo_NativeLib_listFromJNI
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_gavinandre_jnidemo_NativeLib_uuidFromJNI
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_gavinandre_jnidemo_NativeLib
+ * Method:    getSDPath
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_gavinandre_jnidemo_NativeLib_getSDPath
         (JNIEnv *, jclass);
 
 #ifdef __cplusplus

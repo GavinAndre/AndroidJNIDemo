@@ -22,6 +22,8 @@ public class NativeLib {
 
     public static native String uuidFromJNI();
 
+    public static native String getSDPath();
+
 }
 
 
