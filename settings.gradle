@@ -1,1 +1,1 @@
-include ':app', ':imageprocesslibrary'
+include ':app', ':imageprocesslibrary', ':cameraprocesslibrary'

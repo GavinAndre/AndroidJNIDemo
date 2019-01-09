@@ -1,19 +1,22 @@
-package com.gavinandre.jnidemo
+package com.gavinandre.jnidemo.activity
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.gavinandre.jnidemo.NativeLib
+import com.gavinandre.jnidemo.R
+import com.gavinandre.jnidemo.utils.FileUtil
 import com.lingzhi.imageprocesslibrary.ImageProcess
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_native.*
 
-class MainActivity : AppCompatActivity() {
+class NativeActivity : AppCompatActivity() {
 
-    private val TAG = MainActivity::class.java.simpleName
+    private val TAG = NativeActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_native)
         NativeLib.enableCout()
         // Example of a call to a native method
         sample_text.text = NativeLib.stringFromJNI()

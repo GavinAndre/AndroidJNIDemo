@@ -1,4 +1,4 @@
-package com.gavinandre.jnidemo;
+package com.gavinandre.jnidemo.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

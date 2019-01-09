@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -9,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.gavinandre.jnidemo"
         minSdkVersion 21
-        targetSdkVersion 22
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -34,6 +32,12 @@ android {
             path "CMakeLists.txt"
         }
     }
+    packagingOptions {
+        //fix problem `More than one file was found with OS independent path '*.so'`
+        pickFirst 'lib/armeabi-v7a/libopencv_core.so'
+        pickFirst 'lib/armeabi-v7a/libopencv_imgcodecs.so'
+        pickFirst 'lib/armeabi-v7a/libopencv_imgproc.so'
+    }
 }
 
 dependencies {
@@ -45,4 +49,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(path: ':imageprocesslibrary')
+    implementation project(path: ':cameraprocesslibrary')
 }
