@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.gavinandre.imageprocesslibrary.ImageProcess
-import com.gavinandre.jnidemo.NativeLib
 import com.gavinandre.jnidemo.R
 import com.gavinandre.jnidemo.utils.FileUtil
-import kotlinx.android.synthetic.main.activity_native.*
+import kotlinx.android.synthetic.main.activity_mat_bitmap_convert.*
+import kotlinx.coroutines.*
 
 class MatBitmapConvertActivity : AppCompatActivity() {
 
@@ -17,19 +17,34 @@ class MatBitmapConvertActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mat_bitmap_convert)
-        NativeLib.enableCout()
-
-        val s = FileUtil.getSDPath() + "/cat.png"
-        Log.i(TAG, "onCreate: $s")
-        val encodeImageData = ImageProcess.encode(s)
-        Log.i(TAG, "onCreate: $encodeImageData")
-//        val bitmap1 = ImageProcess.decode(encodeImageData)
-        val bitmap1 = BitmapFactory.decodeResource(application.resources, R.drawable.cat)
-
-        val bitmap2 = ImageProcess.processBitmap(bitmap1)
-//        bitmap1.recycle()
-        IVCat.setImageBitmap(bitmap2)
-
-        NativeLib.disableCout()
+        btn1.setOnClickListener { click1() }
+        btn2.setOnClickListener { click2() }
     }
+
+    private fun click1() = runBlocking {
+        GlobalScope.launch(Dispatchers.Main) {
+            val bitmap = GlobalScope.async(Dispatchers.IO) {
+                val s = FileUtil.getSDPath() + "/cat.png"
+                Log.i(TAG, "onCreate: $s")
+                val encodeImageData = ImageProcess.encode(s)
+                Log.i(TAG, "onCreate: $encodeImageData")
+                val bitmap = ImageProcess.decode(encodeImageData)
+                return@async bitmap
+            }.await()
+            IVCat.setImageBitmap(bitmap)
+        }
+    }
+
+    private fun click2() {
+        GlobalScope.launch(Dispatchers.Main) {
+            val bitmap = GlobalScope.async(Dispatchers.IO) {
+                val bitmap1 = BitmapFactory.decodeResource(application.resources, R.drawable.cat)
+                val bitmap2 = ImageProcess.processBitmap(bitmap1)
+                bitmap1.recycle()
+                return@async bitmap2
+            }.await()
+            IVCat.setImageBitmap(bitmap)
+        }
+    }
+
 }
