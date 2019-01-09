@@ -31,7 +31,6 @@ class UsbCameraFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_usb_camera, container, false)
     }
 
@@ -72,8 +71,8 @@ class UsbCameraFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             UsbCameraFragment().apply {
                 arguments = Bundle().apply {
-                    putString(Companion.ARG_PARAM1, param1)
-                    putString(Companion.ARG_PARAM2, param2)
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
                 }
             }
     }
