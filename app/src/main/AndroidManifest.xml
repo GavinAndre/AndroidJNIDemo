@@ -29,6 +29,7 @@
         <activity android:name=".activity.NativeActivity" />
         <activity android:name=".activity.UsbCameraActivity" />
         <activity android:name=".activity.SystemCameraActivity" />
+        <activity android:name=".activity.MatBitmapConvertActivity" />
     </application>
 
 </manifest>

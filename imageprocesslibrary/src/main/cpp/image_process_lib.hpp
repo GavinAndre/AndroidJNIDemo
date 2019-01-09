@@ -1,98 +1,13 @@
-//
-// Created by gavinandre on 17-8-9.
-//
+#include "image_process_jni.h"
+#include "utils/jni_lib.hpp"
+#include "utils/base64.hpp"
 
-#include "image_process.h"
-
-jstring charTojstring(JNIEnv *env, const char *pat) {
-    //定义java String类 strClass
-    jclass strClass = env->FindClass("Ljava/lang/String;");
-    //获取String(byte[],String)的构造器,用于将本地byte[]数组转换为一个新String
-    jmethodID ctorID = env->GetMethodID(strClass, "<init>", "([BLjava/lang/String;)V");
-    //建立byte数组
-    jbyteArray bytes = env->NewByteArray(strlen(pat));
-    //将char* 转换为byte数组
-    env->SetByteArrayRegion(bytes, 0, strlen(pat), (jbyte *) pat);
-    // 设置String, 保存语言类型,用于byte数组转换至String时的参数
-    jstring encoding = env->NewStringUTF("utf-8");
-    //将byte数组转换为java String,并输出
-    return (jstring) env->NewObject(strClass, ctorID, bytes, encoding);
-}
-
-char *jstringToChar(JNIEnv *env, jstring jstr) {
-    char *rtn = NULL;
-    jclass clsstring = env->FindClass("java/lang/String");
-    jstring strencode = env->NewStringUTF("utf-8");
-    jmethodID mid = env->GetMethodID(clsstring, "getBytes", "(Ljava/lang/String;)[B");
-    jbyteArray barr = (jbyteArray) env->CallObjectMethod(jstr, mid, strencode);
-    jsize alen = env->GetArrayLength(barr);
-    jbyte *ba = env->GetByteArrayElements(barr, JNI_FALSE);
-    if (alen > 0) {
-        rtn = (char *) malloc(alen + 1);
-        memcpy(rtn, ba, alen);
-        rtn[alen] = 0;
-    }
-    env->ReleaseByteArrayElements(barr, ba, 0);
-    return rtn;
-}
-
-jstring Java_com_lingzhi_imageprocesslibrary_ImageProcess_Encode(JNIEnv *env, jobject,
-                                                                 jstring imagePath) {
-
-    LOGI("Encode %s", jstringToChar(env, imagePath));
-
-    cv::Mat img_encode;
-    img_encode = cv::imread(jstringToChar(env, imagePath), CV_LOAD_IMAGE_COLOR);
-    std::vector<uchar> data_encode;
-    std::vector<int> param = std::vector<int>(2);
-    param[0] = CV_IMWRITE_PNG_COMPRESSION;
-    param[1] = 9;//default(3)  0-9.
-    cv::imencode(".png", img_encode, data_encode, param);
-    std::string str_encode(data_encode.begin(), data_encode.end());
-
-    std::string encoded = base64_encode(reinterpret_cast<const unsigned char *>(str_encode.c_str()),
-                                        str_encode.length());
-
-    LOGI("Encode %s", encoded.c_str());
-    LOGI("Encode %d", encoded.size());
-
-    return env->NewStringUTF(encoded.c_str());
-}
-
-jobject
-Java_com_lingzhi_imageprocesslibrary_ImageProcess_Decode(JNIEnv *env, jobject,
-                                                         jstring imageData) {
-    LOGI("Decode");
-
-    std::string decoded = base64_decode(jstringToChar(env, imageData));
-    std::vector<uchar> data_decode;
-    data_decode.resize(decoded.size());
-    data_decode.assign(decoded.begin(), decoded.end());
-    cv::Mat pngimage = cv::imdecode(cv::Mat(data_decode), CV_LOAD_IMAGE_COLOR);
-
-    LOGI("pngimage.cols %d , pngimage.rows %d", pngimage.cols, pngimage.rows);
-    LOGI("pngimage.channels %d , pngimage.type %d", pngimage.channels(), pngimage.type());
-
-    jobject bitmap = createBitmap(env, pngimage);
-
-    return mat2bmp(env, pngimage, bitmap, false);
-
-}
-
-jobject
-Java_com_lingzhi_imageprocesslibrary_ImageProcess_processBitmap(JNIEnv *env, jobject,
-                                                                jobject srcBitmap) {
-    cv::Mat srcBitmapMat;
-    if (srcBitmap == nullptr) {
-        LOGE("srcBitmap== nullptr");
-    }
-    LOGI("srcBitmap!= nullptr");
-    bmp2mat(env, srcBitmap, srcBitmapMat);
-    LOGI("bmp2mat");
-    jobject bitmap = createBitmap(env, srcBitmapMat);
-    return mat2bmp(env, srcBitmapMat, bitmap, false);
-
-}
+#include <android/log.h>
+#include <android/bitmap.h>
+#include <opencv2/opencv.hpp>
+#include <opencv2/imgcodecs/imgcodecs_c.h>
+#include <string>
+#include <vector>
 
 void bmp2mat(JNIEnv *env, jobject &srcBitmap, cv::Mat &srcMat) {
     void *srcPixels = 0;
@@ -200,5 +115,61 @@ jobject createBitmap(JNIEnv *env, cv::Mat &pngimage) {
     jmethodID createBitmapMid = env->GetStaticMethodID(bmpCls, "createBitmap",
                                                        "(IILandroid/graphics/Bitmap$Config;)Landroid/graphics/Bitmap;");
     return env->CallStaticObjectMethod(bmpCls, createBitmapMid, imgWidth, imgHeight, jBmpCfg);
+}
+
+
+jstring encode(JNIEnv *env, jstring imagePath) {
+
+    std::string path = jstring_to_string(env, imagePath);
+
+    LOGI("encode %s", path.c_str());
+
+    cv::Mat img_encode;
+    img_encode = cv::imread(path, CV_LOAD_IMAGE_COLOR);
+    std::vector<uchar> data_encode;
+    std::vector<int> param = std::vector<int>(2);
+    param[0] = CV_IMWRITE_PNG_COMPRESSION;
+    param[1] = 9;//default(3)  0-9.
+    cv::imencode(".png", img_encode, data_encode, param);
+    std::string str_encode(data_encode.begin(), data_encode.end());
+
+    std::string encoded = base64_encode(reinterpret_cast<const unsigned char *>(str_encode.c_str()),
+                                        str_encode.length());
+
+    LOGI("encode %s", encoded.c_str());
+    LOGI("encode %d", encoded.size());
+
+    return env->NewStringUTF(encoded.c_str());
+}
+
+jobject decode(JNIEnv *env, jstring imageData) {
+    LOGI("decode");
+
+    std::string decoded = base64_decode(jstring_to_string(env, imageData));
+    std::vector<uchar> data_decode;
+    data_decode.resize(decoded.size());
+    data_decode.assign(decoded.begin(), decoded.end());
+    cv::Mat pngimage = cv::imdecode(cv::Mat(data_decode), CV_LOAD_IMAGE_COLOR);
+
+    LOGI("pngimage.cols %d , pngimage.rows %d", pngimage.cols, pngimage.rows);
+    LOGI("pngimage.channels %d , pngimage.type %d", pngimage.channels(), pngimage.type());
+
+    jobject bitmap = createBitmap(env, pngimage);
+
+    return mat2bmp(env, pngimage, bitmap, false);
+
+}
+
+jobject processBitmap(JNIEnv *env, jobject srcBitmap) {
+    cv::Mat srcBitmapMat;
+    if (srcBitmap == nullptr) {
+        LOGE("srcBitmap== nullptr");
+    }
+    LOGI("srcBitmap!= nullptr");
+    bmp2mat(env, srcBitmap, srcBitmapMat);
+    LOGI("bmp2mat");
+    jobject bitmap = createBitmap(env, srcBitmapMat);
+    return mat2bmp(env, srcBitmapMat, bitmap, false);
+
 }
 

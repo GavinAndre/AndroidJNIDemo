@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         btnNative.setOnClickListener { startActivity(Intent(this,NativeActivity::class.java)) }
         btnSystemCamera.setOnClickListener { startActivity(Intent(this, SystemCameraActivity::class.java)) }
         btnUsbCamera.setOnClickListener { startActivity(Intent(this, UsbCameraActivity::class.java)) }
+        btnMatBitmapConvert.setOnClickListener { startActivity(Intent(this, MatBitmapConvertActivity::class.java)) }
     }
 
     override fun onDestroy() {

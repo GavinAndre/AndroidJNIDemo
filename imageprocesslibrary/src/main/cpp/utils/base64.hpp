@@ -1,5 +1,5 @@
-#include "base64.h"
 #include <iostream>
+#include <string>
 
 static const std::string base64_chars =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

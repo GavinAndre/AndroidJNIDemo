@@ -7,29 +7,29 @@ include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include)
 set(jniLibs "${CMAKE_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}")
 
 #opencv
-add_library(libopencv_core SHARED IMPORTED )
+add_library(libopencv_core SHARED IMPORTED)
 set_target_properties(libopencv_core PROPERTIES
         IMPORTED_LOCATION "${jniLibs}/libopencv_core.so")
 
-add_library(libopencv_imgcodecs SHARED IMPORTED )
+add_library(libopencv_imgcodecs SHARED IMPORTED)
 set_target_properties(libopencv_imgcodecs PROPERTIES
         IMPORTED_LOCATION "${jniLibs}/libopencv_imgcodecs.so")
 
-add_library(libopencv_imgproc SHARED IMPORTED )
+add_library(libopencv_imgproc SHARED IMPORTED)
 set_target_properties(libopencv_imgproc PROPERTIES
         IMPORTED_LOCATION "${jniLibs}/libopencv_imgproc.so")
 
-add_library(image_process-lib
-            SHARED
-            src/main/cpp/image_process.cpp
-            src/main/cpp/base64.cpp
-            )
+add_library(image_process_lib
+        SHARED
+        src/main/cpp/image_process_jni.cpp
+        )
 
 find_library(log-lib log)
 
-target_link_libraries(image_process-lib
-                      jnigraphics
-                      libopencv_core
-                      libopencv_imgcodecs
-                      libopencv_imgproc
-                      ${log-lib})
+target_link_libraries(
+        image_process_lib
+        jnigraphics
+        libopencv_core
+        libopencv_imgcodecs
+        libopencv_imgproc
+        ${log-lib})
