@@ -4,14 +4,12 @@
 #include "utils/android_buf.hpp"
 #include "utils/uuid_lib.hpp"
 
-using namespace std;
-
 void enableCout() {
-    cout.rdbuf(new AndroidBuf);
+    std::cout.rdbuf(new AndroidBuf);
 }
 
 void disableCout() {
-    delete cout.rdbuf(0);
+    delete std::cout.rdbuf(0);
 }
 
 jstring stringFromJNI(JNIEnv *env) {
@@ -20,15 +18,15 @@ jstring stringFromJNI(JNIEnv *env) {
 }
 
 void stringToJNI(JNIEnv *env, jstring str) {
-    string s = jstring_to_string(env, str);
-    cout << s << endl;
+    std::string s = jstring_to_string(env, str);
+    std::cout << s << std::endl;
     LOGI("%s", s.c_str());
 }
 
 void listToJNI(JNIEnv *env, jobject array_list) {
     std::vector<std::string> result = array_list_to_vector(env, array_list);
     for (std::string s: result) {
-        cout << s << endl;
+        std::cout << s << std::endl;
     }
 }
 
