@@ -1,4 +1,3 @@
-#include "image_process_jni.h"
 #include "utils/jni_lib.hpp"
 #include "utils/base64.hpp"
 
@@ -85,7 +84,7 @@ jobject mat2bmp(JNIEnv *env, cv::Mat &src, const jobject &bitmap, bool needPremu
         }
         AndroidBitmap_unlockPixels(env, bitmap);
         return bitmap;
-    } catch (cv::Exception e) {
+    } catch (cv::Exception &e) {
         AndroidBitmap_unlockPixels(env, bitmap);
         jclass je = env->FindClass("org/opencv/core/CvException");
         if (!je) je = env->FindClass("java/lang/Exception");
@@ -117,59 +116,23 @@ jobject createBitmap(JNIEnv *env, cv::Mat &pngimage) {
     return env->CallStaticObjectMethod(bmpCls, createBitmapMid, imgWidth, imgHeight, jBmpCfg);
 }
 
-
-jstring encode(JNIEnv *env, jstring imagePath) {
-
+jobject pngToBitmap(JNIEnv *env, jstring imagePath) {
     std::string path = jstring_to_string(env, imagePath);
-
-    LOGI("encode %s", path.c_str());
-
-    cv::Mat img_encode;
-    img_encode = cv::imread(path, CV_LOAD_IMAGE_COLOR);
-    std::vector<uchar> data_encode;
-    std::vector<int> param = std::vector<int>(2);
-    param[0] = CV_IMWRITE_PNG_COMPRESSION;
-    param[1] = 9;//default(3)  0-9.
-    cv::imencode(".png", img_encode, data_encode, param);
-    std::string str_encode(data_encode.begin(), data_encode.end());
-
-    std::string encoded = base64_encode(reinterpret_cast<const unsigned char *>(str_encode.c_str()),
-                                        str_encode.length());
-
-    LOGI("encode %s", encoded.c_str());
-    LOGI("encode %d", encoded.size());
-
-    return env->NewStringUTF(encoded.c_str());
+    LOGI("imagePath: %s", path.c_str());
+    cv::Mat pngMat = cv::imread(path);
+    jobject bitmap = createBitmap(env, pngMat);
+    return mat2bmp(env, pngMat, bitmap, false);
 }
 
-jobject decode(JNIEnv *env, jstring imageData) {
-    LOGI("decode");
-
-    std::string decoded = base64_decode(jstring_to_string(env, imageData));
-    std::vector<uchar> data_decode;
-    data_decode.resize(decoded.size());
-    data_decode.assign(decoded.begin(), decoded.end());
-    cv::Mat pngimage = cv::imdecode(cv::Mat(data_decode), CV_LOAD_IMAGE_COLOR);
-
-    LOGI("pngimage.cols %d , pngimage.rows %d", pngimage.cols, pngimage.rows);
-    LOGI("pngimage.channels %d , pngimage.type %d", pngimage.channels(), pngimage.type());
-
-    jobject bitmap = createBitmap(env, pngimage);
-
-    return mat2bmp(env, pngimage, bitmap, false);
-
+void bitmapToPng(JNIEnv *env, jstring savePath, jobject srcBitmap) {
+    std::string path = jstring_to_string(env, savePath);
+    LOGI("imagePath: %s", path.c_str());
+    cv::Mat pngMat;
+    bmp2mat(env, srcBitmap, pngMat);
+    std::vector<int> param;
+    param.push_back(CV_IMWRITE_PNG_COMPRESSION);
+    param.push_back(9);
+    cv::cvtColor(pngMat, pngMat, CV_RGBA2BGR);
+    cv::imwrite(path, pngMat, param);
+    LOGI("bitmapToPng complete");
 }
-
-jobject processBitmap(JNIEnv *env, jobject srcBitmap) {
-    cv::Mat srcBitmapMat;
-    if (srcBitmap == nullptr) {
-        LOGE("srcBitmap== nullptr");
-    }
-    LOGI("srcBitmap!= nullptr");
-    bmp2mat(env, srcBitmap, srcBitmapMat);
-    LOGI("bmp2mat");
-    jobject bitmap = createBitmap(env, srcBitmapMat);
-    return mat2bmp(env, srcBitmapMat, bitmap, false);
-
-}
-

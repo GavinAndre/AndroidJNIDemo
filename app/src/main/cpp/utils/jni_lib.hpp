@@ -69,8 +69,8 @@ jobject vector_to_array_list(JNIEnv *env, std::vector<std::string> vector) {
     return result;
 }
 
-std::string callJavaStaticMethod(JNIEnv *env, std::string class_name,
-                                 std::string method_name, std::string method_sign) {
+std::string callJavaStaticMethod(JNIEnv *env, const std::string &class_name,
+                                 const std::string &method_name, const std::string &method_sign) {
     // 先找到要调用的类
     jclass clazz = env->FindClass(class_name.c_str());
     if (clazz == nullptr) {
@@ -85,7 +85,7 @@ std::string callJavaStaticMethod(JNIEnv *env, std::string class_name,
         return nullptr;
     }
     // 开始调用java中的静态方法
-    jstring result = (jstring) env->CallStaticObjectMethod(clazz, id); //调用java方法
+    jstring result = static_cast<jstring>(env->CallStaticObjectMethod(clazz, id));
     // 释放资源
     env->DeleteLocalRef(clazz);
     // 将jstring转换为string

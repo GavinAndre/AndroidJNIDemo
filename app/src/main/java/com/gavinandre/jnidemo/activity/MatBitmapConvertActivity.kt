@@ -1,14 +1,20 @@
 package com.gavinandre.jnidemo.activity
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import com.gavinandre.imageprocesslibrary.ImageProcess
 import com.gavinandre.jnidemo.R
 import com.gavinandre.jnidemo.utils.FileUtil
 import kotlinx.android.synthetic.main.activity_mat_bitmap_convert.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.util.*
+
 
 class MatBitmapConvertActivity : AppCompatActivity() {
 
@@ -21,28 +27,34 @@ class MatBitmapConvertActivity : AppCompatActivity() {
         btn2.setOnClickListener { click2() }
     }
 
-    private fun click1() = runBlocking {
+    private fun click1() {
         GlobalScope.launch(Dispatchers.Main) {
-            val bitmap = GlobalScope.async(Dispatchers.IO) {
-                val s = FileUtil.getSDPath() + "/cat.png"
-                Log.i(TAG, "onCreate: $s")
-                val encodeImageData = ImageProcess.encode(s)
-                Log.i(TAG, "onCreate: $encodeImageData")
-                val bitmap = ImageProcess.decode(encodeImageData)
-                return@async bitmap
+            btn2.visibility = View.INVISIBLE
+            val savePath = GlobalScope.async(Dispatchers.IO) {
+                val savePath = FileUtil.getSDPath() + "/cat.png"
+                val bitmap = FileUtil.getImageFromAssetsFile(applicationContext, "cat.png")
+                val startDate = Date(System.currentTimeMillis())
+                ImageProcess.bitmapToPng(savePath, bitmap)
+                val endDate = Date(System.currentTimeMillis())
+                val diff = endDate.time - startDate.time
+                Log.i(TAG, "click1: diff $diff")
+                bitmap.recycle()
+                return@async savePath
             }.await()
-            IVCat.setImageBitmap(bitmap)
+
+            btn2.visibility = View.VISIBLE
+            Toast.makeText(applicationContext, "保存路径 $savePath", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun click2() {
         GlobalScope.launch(Dispatchers.Main) {
             val bitmap = GlobalScope.async(Dispatchers.IO) {
-                val bitmap1 = BitmapFactory.decodeResource(application.resources, R.drawable.cat)
-                val bitmap2 = ImageProcess.processBitmap(bitmap1)
-                bitmap1.recycle()
-                return@async bitmap2
+                val savePath = FileUtil.getSDPath() + "/cat.png"
+                val bitmap = ImageProcess.pngToBitmap(savePath)
+                return@async bitmap
             }.await()
+
             IVCat.setImageBitmap(bitmap)
         }
     }

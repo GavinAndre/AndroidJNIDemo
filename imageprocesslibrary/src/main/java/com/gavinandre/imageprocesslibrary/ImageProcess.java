@@ -12,10 +12,8 @@ public class ImageProcess {
         System.loadLibrary("image_process_lib");
     }
 
-    public native static String encode(String imagePath);
+    public native static Bitmap pngToBitmap(String imageData);
 
-    public native static Bitmap decode(String imageData);
-
-    public native static Bitmap processBitmap(Bitmap bitmap);
+    public native static void bitmapToPng(String savePath, Bitmap bitmap);
 
 }
