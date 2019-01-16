@@ -1,5 +1,4 @@
 #include "utils/jni_lib.hpp"
-#include "utils/base64.hpp"
 
 #include <android/log.h>
 #include <android/bitmap.h>

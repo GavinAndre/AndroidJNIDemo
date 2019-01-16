@@ -1,8 +1,8 @@
-#include "native-lib.h"
 #include "utils/jni_lib.hpp"
 #include "utils/android_log.h"
 #include "utils/android_buf.hpp"
 #include "utils/uuid_lib.hpp"
+#include "utils/base64.hpp"
 
 void enableCout() {
     std::cout.rdbuf(new AndroidBuf);
@@ -48,4 +48,16 @@ jstring getSDPath(JNIEnv *env) {
     std::string sd_path = callJavaStaticMethod(env, "com/gavinandre/jnidemo/utils/FileUtil",
                                                "getSDPath", "()Ljava/lang/String;");
     return string_to_jstring(env, sd_path);
+}
+
+jstring base64Encode(JNIEnv *env) {
+    std::string str = "Hello World!";
+    std::string encoded = base64_encode(reinterpret_cast<const unsigned char *>(str.c_str()),
+                                        str.length());
+    return string_to_jstring(env, encoded);
+}
+
+void base64decode(JNIEnv *env, jstring encode_data) {
+    std::string decoded_data = base64_decode(jstring_to_string(env, encode_data));
+    LOGI("base64decode %s", decoded_data.c_str());
 }

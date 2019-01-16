@@ -23,16 +23,18 @@ class NativeActivity : AppCompatActivity() {
         NativeLib.listToJNI(list)
 
         val list2 = NativeLib.listFromJNI()
-
         Log.i(TAG, "onCreate: listFromJni: $list2")
 
         val uuid = NativeLib.uuidFromJNI()
-
         Log.i(TAG, "onCreate: uuidFromJNI: $uuid")
 
         val sdPath = NativeLib.getSDPath()
-
         Log.i(TAG, "onCreate: getSDPath: $sdPath")
+
+        val baseStr = NativeLib.base64Encode()
+        Log.i(TAG, "onCreate: base64Encode: $baseStr")
+
+        NativeLib.base64Decode(baseStr)
 
         NativeLib.disableCout()
     }

@@ -24,6 +24,10 @@ public class NativeLib {
 
     public static native String getSDPath();
 
+    public static native String base64Encode();
+
+    public static native void base64Decode(String string);
+
 }
 
 
