@@ -96,7 +96,7 @@
 /* #undef HAVE_HALIDE */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-/* #undef HAVE_INTTYPES_H */
+#define HAVE_INTTYPES_H 1
 
 /* Intel Perceptual Computing SDK library */
 /* #undef HAVE_INTELPERC */
@@ -137,7 +137,7 @@
 /* #undef HAVE_OPENCL_SVM */
 
 /* OpenEXR codec */
-/* #undef HAVE_OPENEXR */
+#define HAVE_OPENEXR
 
 /* OpenGL support*/
 /* #undef HAVE_OPENGL */
@@ -173,7 +173,7 @@
 /* #undef HAVE_TBB */
 
 /* TIFF codec */
-/* #undef HAVE_TIFF */
+#define HAVE_TIFF
 
 /* Unicap video capture library */
 /* #undef HAVE_UNICAP */
