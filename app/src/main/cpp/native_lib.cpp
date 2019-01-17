@@ -1,5 +1,5 @@
 #include <jni.h>
-#include "native-lib.hpp"
+#include "native_lib.hpp"
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_gavinandre_jnidemo_NativeLib_enableCout(JNIEnv *env, jclass type) {

@@ -16,9 +16,9 @@ android {
                 arguments "-DANDROID_ARM_NEON=TRUE", "-DCMAKE_BUILD_TYPE=Release"
                 cppFlags "-std=c++11"
             }
-            ndk {
-                abiFilters 'armeabi-v7a'
-            }
+        }
+        ndk {
+            abiFilters 'armeabi-v7a'
         }
     }
     buildTypes {
