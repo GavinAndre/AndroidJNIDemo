@@ -19,6 +19,7 @@ add_library(libopencv_imgproc SHARED IMPORTED)
 set_target_properties(libopencv_imgproc PROPERTIES
         IMPORTED_LOCATION "${jniLibs}/libopencv_imgproc.so")
 
+#jni library
 add_library(image_process_lib
         SHARED
         image_process_jni.cpp
