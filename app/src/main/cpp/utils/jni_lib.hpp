@@ -16,7 +16,7 @@ std::string jstring_to_string(JNIEnv *env, jstring j_str) {
 
 std::vector<std::string> array_list_to_vector(JNIEnv *env, jobject arrayList) {
     //先找到要调用的类，ArrayList，这里使用全局引用，也可以使用局部引用
-    jclass java_util_ArrayList = static_cast<jclass> (env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
+    jclass java_util_ArrayList = reinterpret_cast<jclass> (env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
     // 获取java方法id
     // 参数2是调用的方法名，<init>表示构造函数
     // 参数3表示方法签名，(I)V表示参数为int型，返回值void型
@@ -30,7 +30,7 @@ std::vector<std::string> array_list_to_vector(JNIEnv *env, jobject arrayList) {
     result.reserve(len);
     for (jint i = 0; i < len; i++) {
         // 调用get方法，获取jstring
-        jstring element = static_cast<jstring>(env->CallObjectMethod(arrayList, java_util_ArrayList_get, i));
+        jstring element = reinterpret_cast<jstring>(env->CallObjectMethod(arrayList, java_util_ArrayList_get, i));
         // jstring转char*
         const char *p_chars = env->GetStringUTFChars(element, nullptr);
         // 将char*添加到vector中
@@ -46,7 +46,7 @@ std::vector<std::string> array_list_to_vector(JNIEnv *env, jobject arrayList) {
 
 jobject vector_to_array_list(JNIEnv *env, std::vector<std::string> vector) {
     //先找到要调用的类，ArrayList，这里使用全局引用，也可以使用局部引用
-    jclass java_util_ArrayList = static_cast<jclass>(env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
+    jclass java_util_ArrayList = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
     // 获取java方法id
     // 参数2是调用的方法名，<init>表示构造函数
     // 参数3表示方法签名，(I)V表示参数为int型，返回值void型
@@ -85,7 +85,7 @@ std::string callJavaStaticMethod(JNIEnv *env, const std::string &class_name,
         return nullptr;
     }
     // 开始调用java中的静态方法
-    jstring result = static_cast<jstring>(env->CallStaticObjectMethod(clazz, id));
+    jstring result = reinterpret_cast<jstring>(env->CallStaticObjectMethod(clazz, id));
     // 释放资源
     env->DeleteLocalRef(clazz);
     // 将jstring转换为string
