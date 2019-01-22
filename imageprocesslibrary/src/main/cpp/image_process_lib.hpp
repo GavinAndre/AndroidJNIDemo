@@ -1,11 +1,8 @@
 #include "utils/jni_lib.hpp"
 
-#include <android/log.h>
 #include <android/bitmap.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgcodecs/imgcodecs_c.h>
-#include <string>
-#include <vector>
 
 void bmp2mat(JNIEnv *env, jobject &srcBitmap, cv::Mat &srcMat) {
     void *srcPixels = 0;

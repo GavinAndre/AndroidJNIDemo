@@ -1,6 +1,5 @@
 #include <jni.h>
 #include <iostream>
-#include <vector>
 #include "android_log.h"
 
 jstring string_to_jstring(JNIEnv *env, std::string str) {
