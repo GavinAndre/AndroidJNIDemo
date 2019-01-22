@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class NativeLib {
 
     static {
-        System.loadLibrary("native-lib");
+        System.loadLibrary("native_lib");
     }
 
     public static native void enableCout();
