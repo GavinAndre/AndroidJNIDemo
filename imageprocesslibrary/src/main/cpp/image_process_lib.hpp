@@ -14,7 +14,7 @@ void bmp2mat(JNIEnv *env, jobject &srcBitmap, cv::Mat &srcMat) {
         uint32_t srcWidth = srcBitmapInfo.width;
         srcMat.create(srcHeight, srcWidth, CV_8UC4);
         if (srcBitmapInfo.format == ANDROID_BITMAP_FORMAT_RGBA_8888) {
-            LOGI("ANDROID_BITMAP_FORMAT_RGBA_8888");
+            LOGI("RGBA_8888");
             cv::Mat tmp(srcHeight, srcWidth, CV_8UC4, srcPixels);
             tmp.copyTo(srcMat);
         } else {
