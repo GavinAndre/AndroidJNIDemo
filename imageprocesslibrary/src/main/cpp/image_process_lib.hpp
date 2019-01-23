@@ -4,40 +4,44 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgcodecs/imgcodecs_c.h>
 
-void bmp2mat(JNIEnv *env, jobject &srcBitmap, cv::Mat &srcMat) {
+void bmp2mat(JNIEnv *env, jobject &srcBitmap, cv::Mat &dstMat, bool needPremultiplyAlpha) {
     void *srcPixels = 0;
     AndroidBitmapInfo srcBitmapInfo;
     try {
-        AndroidBitmap_getInfo(env, srcBitmap, &srcBitmapInfo);
-        AndroidBitmap_lockPixels(env, srcBitmap, &srcPixels);
+        CV_Assert(AndroidBitmap_getInfo(env, srcBitmap, &srcBitmapInfo) >= 0);
+        CV_Assert(srcBitmapInfo.format == ANDROID_BITMAP_FORMAT_RGBA_8888 ||
+                  srcBitmapInfo.format == ANDROID_BITMAP_FORMAT_RGB_565);
+        CV_Assert(AndroidBitmap_lockPixels(env, srcBitmap, &srcPixels) >= 0);
+        CV_Assert(srcPixels);
         uint32_t srcHeight = srcBitmapInfo.height;
         uint32_t srcWidth = srcBitmapInfo.width;
-        srcMat.create(srcHeight, srcWidth, CV_8UC4);
+        dstMat.create(srcHeight, srcWidth, CV_8UC4);
         if (srcBitmapInfo.format == ANDROID_BITMAP_FORMAT_RGBA_8888) {
             LOGI("RGBA_8888");
             cv::Mat tmp(srcHeight, srcWidth, CV_8UC4, srcPixels);
-            tmp.copyTo(srcMat);
+            if (needPremultiplyAlpha) {
+                cvtColor(tmp, dstMat, cv::COLOR_mRGBA2RGBA);
+            } else {
+                tmp.copyTo(dstMat);
+            }
         } else {
-            LOGI("else");
+            LOGI("RGB_565");
             cv::Mat tmp = cv::Mat(srcHeight, srcWidth, CV_8UC2, srcPixels);
-            cvtColor(tmp, srcMat, cv::COLOR_BGR5652RGBA);
+            cvtColor(tmp, dstMat, cv::COLOR_BGR5652RGBA);
         }
         AndroidBitmap_unlockPixels(env, srcBitmap);
-        return;
     } catch (cv::Exception &e) {
         AndroidBitmap_unlockPixels(env, srcBitmap);
         jclass je = env->FindClass("java/lang/Exception");
         env->ThrowNew(je, e.what());
-        return;
     } catch (...) {
         AndroidBitmap_unlockPixels(env, srcBitmap);
         jclass je = env->FindClass("java/lang/Exception");
         env->ThrowNew(je, "unknown");
-        return;
     }
 }
 
-jobject mat2bmp(JNIEnv *env, cv::Mat &src, const jobject &bitmap, bool needPremultiplyAlpha) {
+void mat2bmp(JNIEnv *env, cv::Mat &src, const jobject &bitmap, bool needPremultiplyAlpha) {
     AndroidBitmapInfo info;
     void *pixels = 0;
 
@@ -47,7 +51,7 @@ jobject mat2bmp(JNIEnv *env, cv::Mat &src, const jobject &bitmap, bool needPremu
         CV_Assert(AndroidBitmap_lockPixels(env, bitmap, &pixels) >= 0);
         CV_Assert(pixels);
         if (info.format == ANDROID_BITMAP_FORMAT_RGBA_8888) {
-            LOGI("ANDROID_BITMAP_FORMAT_RGBA_8888");
+            LOGI("RGBA_8888");
             cv::Mat tmp(info.height, info.width, CV_8UC4, pixels);
             if (src.type() == CV_8UC1) {
                 LOGI("CV_8UC1");
@@ -64,7 +68,7 @@ jobject mat2bmp(JNIEnv *env, cv::Mat &src, const jobject &bitmap, bool needPremu
                 }
             }
         } else {
-            LOGI("else");
+            LOGI("RGB_565");
             // info.format == ANDROID_BITMAP_FORMAT_RGB_565
             cv::Mat tmp(info.height, info.width, CV_8UC2, pixels);
             if (src.type() == CV_8UC1) {
@@ -79,18 +83,15 @@ jobject mat2bmp(JNIEnv *env, cv::Mat &src, const jobject &bitmap, bool needPremu
             }
         }
         AndroidBitmap_unlockPixels(env, bitmap);
-        return bitmap;
     } catch (cv::Exception &e) {
         AndroidBitmap_unlockPixels(env, bitmap);
         jclass je = env->FindClass("org/opencv/core/CvException");
         if (!je) je = env->FindClass("java/lang/Exception");
         env->ThrowNew(je, e.what());
-        return bitmap;
     } catch (...) {
         AndroidBitmap_unlockPixels(env, bitmap);
         jclass je = env->FindClass("java/lang/Exception");
         env->ThrowNew(je, "Unknown exception in JNI code {nMatToBitmap}");
-        return bitmap;
     }
 }
 
@@ -117,14 +118,15 @@ jobject pngToBitmap(JNIEnv *env, jstring imagePath) {
     LOGI("imagePath: %s", path.c_str());
     cv::Mat pngMat = cv::imread(path);
     jobject bitmap = createBitmap(env, pngMat);
-    return mat2bmp(env, pngMat, bitmap, false);
+    mat2bmp(env, pngMat, bitmap, false);
+    return bitmap;
 }
 
 void bitmapToPng(JNIEnv *env, jstring savePath, jobject srcBitmap) {
     std::string path = jstring_to_string(env, savePath);
     LOGI("imagePath: %s", path.c_str());
     cv::Mat pngMat;
-    bmp2mat(env, srcBitmap, pngMat);
+    bmp2mat(env, srcBitmap, pngMat, false);
     std::vector<int> param;
     param.push_back(CV_IMWRITE_PNG_COMPRESSION);
     param.push_back(9);
