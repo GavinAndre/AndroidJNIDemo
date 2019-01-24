@@ -40,10 +40,10 @@ int prepareUsbCamera(int width, int height) {
     return JNI_OK;
 }
 
-void processSystemCamera(JNIEnv *env, jbyteArray yuv) {
+void processSystemCamera(JNIEnv *env, jbyteArray &yuv) {
     //    LOGE("processSystemCamera");
 
-    jbyte *_yuv = env->GetByteArrayElements(yuv, 0);
+    jbyte *_yuv = env->GetByteArrayElements(yuv, nullptr);
 
     cv::Mat yuvimg(IMG_HEIGHT + IMG_HEIGHT / 2, IMG_WIDTH, CV_8UC1, (uchar *) _yuv);
     cv::cvtColor(yuvimg, yuvimg, cv::COLOR_YUV420sp2RGBA);
@@ -66,7 +66,7 @@ void processUsbCamera() {
     frame = yuvimg;
 }
 
-void pixelToBmp(JNIEnv *env, jobject bitmap) {
+void pixelToBmp(JNIEnv *env, jobject &bitmap) {
     cv::Mat tmp = !frame.empty() ?
                   frame(cv::Rect(0, 0, PREVIEW_IMG_WIDTH, PREVIEW_IMG_HEIGHT)).clone() :
                   cv::Mat(PREVIEW_IMG_HEIGHT, PREVIEW_IMG_WIDTH, CV_8UC4,

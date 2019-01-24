@@ -113,7 +113,7 @@ jobject createBitmap(JNIEnv *env, cv::Mat &pngimage) {
     return env->CallStaticObjectMethod(bmpCls, createBitmapMid, imgWidth, imgHeight, jBmpCfg);
 }
 
-jobject pngToBitmap(JNIEnv *env, jstring imagePath) {
+jobject pngToBitmap(JNIEnv *env, jstring &imagePath) {
     std::string path = jstring_to_string(env, imagePath);
     LOGI("imagePath: %s", path.c_str());
     cv::Mat pngMat = cv::imread(path);
@@ -122,7 +122,7 @@ jobject pngToBitmap(JNIEnv *env, jstring imagePath) {
     return bitmap;
 }
 
-void bitmapToPng(JNIEnv *env, jstring savePath, jobject srcBitmap) {
+void bitmapToPng(JNIEnv *env, jstring &savePath, jobject &srcBitmap) {
     std::string path = jstring_to_string(env, savePath);
     LOGI("imagePath: %s", path.c_str());
     cv::Mat pngMat;

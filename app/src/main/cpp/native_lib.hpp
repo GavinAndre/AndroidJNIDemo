@@ -17,13 +17,13 @@ jstring stringFromJNI(JNIEnv *env) {
     return string_to_jstring(env, hello);
 }
 
-void stringToJNI(JNIEnv *env, jstring str) {
+void stringToJNI(JNIEnv *env, jstring &str) {
     std::string s = jstring_to_string(env, str);
     std::cout << s << std::endl;
     LOGI("%s", s.c_str());
 }
 
-void listToJNI(JNIEnv *env, jobject array_list) {
+void listToJNI(JNIEnv *env, jobject &array_list) {
     std::vector<std::string> result = array_list_to_vector(env, array_list);
     for (std::string s: result) {
         std::cout << s << std::endl;
@@ -57,7 +57,7 @@ jstring base64Encode(JNIEnv *env) {
     return string_to_jstring(env, encoded);
 }
 
-void base64decode(JNIEnv *env, jstring encode_data) {
+void base64decode(JNIEnv *env, jstring &encode_data) {
     std::string decoded_data = base64_decode(jstring_to_string(env, encode_data));
     LOGI("base64decode %s", decoded_data.c_str());
 }

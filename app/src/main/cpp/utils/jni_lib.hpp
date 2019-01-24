@@ -3,18 +3,18 @@
 #include <vector>
 #include "android_log.h"
 
-jstring string_to_jstring(JNIEnv *env, std::string str) {
+jstring string_to_jstring(JNIEnv *env, std::string &str) {
     return env->NewStringUTF(str.c_str());
 }
 
-std::string jstring_to_string(JNIEnv *env, jstring j_str) {
-    const char *c = env->GetStringUTFChars(j_str, 0);
+std::string jstring_to_string(JNIEnv *env, jstring &j_str) {
+    const char *c = env->GetStringUTFChars(j_str, nullptr);
     std::string c_str = std::string(c);
     env->ReleaseStringUTFChars(j_str, c);
     return c_str;
 }
 
-std::vector<std::string> array_list_to_vector(JNIEnv *env, jobject arrayList) {
+std::vector<std::string> array_list_to_vector(JNIEnv *env, jobject &arrayList) {
     //先找到要调用的类，ArrayList，这里使用全局引用，也可以使用局部引用
     jclass java_util_ArrayList = reinterpret_cast<jclass> (env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
     // 获取java方法id
@@ -44,7 +44,7 @@ std::vector<std::string> array_list_to_vector(JNIEnv *env, jobject arrayList) {
     return result;
 }
 
-jobject vector_to_array_list(JNIEnv *env, std::vector<std::string> vector) {
+jobject vector_to_array_list(JNIEnv *env, std::vector<std::string> &vector) {
     //先找到要调用的类，ArrayList，这里使用全局引用，也可以使用局部引用
     jclass java_util_ArrayList = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
     // 获取java方法id
