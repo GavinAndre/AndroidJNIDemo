@@ -14,6 +14,12 @@ std::string jstring_to_string(JNIEnv *env, jstring &j_str) {
     return c_str;
 }
 
+float Float_to_float(JNIEnv *env, jobject element) {
+    jclass cls = env->FindClass("java/lang/Float");
+    jmethodID getVal = env->GetMethodID(cls, "floatValue", "()F");
+    return env->CallFloatMethod(element, getVal);
+}
+
 std::vector<std::string> array_list_to_vector(JNIEnv *env, jobject &arrayList) {
     //先找到要调用的类，ArrayList，这里使用全局引用，也可以使用局部引用
     jclass java_util_ArrayList = reinterpret_cast<jclass> (env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
