@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion rootProject.android["compileSdkVersion"]
+    buildToolsVersion rootProject.android["buildToolsVersion"]
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.android["minSdkVersion"]
+        targetSdkVersion rootProject.android["targetSdkVersion"]
+        versionCode rootProject.android["versionCode"]
+        versionName rootProject.android["versionName"]
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_ARM_NEON=TRUE", "-DCMAKE_BUILD_TYPE=Release"
@@ -40,5 +40,5 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation rootProject.ext.dependencies["appcompat-v7"]
 }
