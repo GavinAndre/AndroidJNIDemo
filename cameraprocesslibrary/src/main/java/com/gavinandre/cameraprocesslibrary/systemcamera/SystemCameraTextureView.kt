@@ -16,7 +16,6 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     
     companion object {
         var drawFrame: Int = 0
-        private const val MAGIC_TEXTURE_ID = 10
     }
     
     private var stop: Boolean = false
@@ -28,18 +27,12 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     
     private val mSrcRect: Rect by lazy { Rect(0, 0, mBitmap.width, mBitmap.height) }
     private val mDstRect: Rect by lazy { Rect(0, 0, width, height) }
-    
-    private val emptySurfaceTexture: SurfaceTexture by lazy { SurfaceTexture(MAGIC_TEXTURE_ID) }
-    
+
     @JvmOverloads
     constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
             : super(context, attributeSet, defStyleAttr)
     
     init {
-        init()
-    }
-    
-    private fun init() {
         //设置背景透明，记住这里是[是否不透明]
         isOpaque = false
         //设置监听
@@ -50,7 +43,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         //打开相机
         Camera1Manager.openCamera(1)
-        var ret = Camera1Manager.setupCamera(emptySurfaceTexture)
+        var ret = Camera1Manager.setupCamera()
         if (ret == -1) {
             Toast.makeText(context, "摄像头初始化失败", Toast.LENGTH_SHORT).show()
             return
@@ -79,16 +72,11 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
         Camera1Manager.releaseCamera()
         CameraProcessLib.releaseSystemCamera()
         releaseBitmap()
-        releaseSurfaceTexture()
         return true
     }
     
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
         // Log.i(TAG, "onSurfaceTextureUpdated: ");
-    }
-    
-    private fun releaseSurfaceTexture() {
-        emptySurfaceTexture.release()
     }
     
     private fun releaseBitmap() {

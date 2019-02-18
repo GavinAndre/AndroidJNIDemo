@@ -32,10 +32,6 @@ class UsbCameraTextureView @JvmOverloads constructor(context: Context, attrs: At
     private val mDstRect: Rect by lazy { Rect(0, 0, width, height) }
     
     init {
-        init()
-    }
-    
-    private fun init() {
         //设置背景透明，记住这里是[是否不透明]
         isOpaque = false
         //设置监听

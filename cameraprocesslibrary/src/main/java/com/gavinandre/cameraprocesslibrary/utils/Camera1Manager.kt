@@ -8,7 +8,9 @@ import android.util.Log
 object Camera1Manager {
     
     private val TAG = Camera1Manager::class.java.simpleName
-    
+
+    private const val MAGIC_TEXTURE_ID = 10
+
     const val PREVIEW_WIDTH = 480
     const val PREVIEW_HEIGHT = 640
     const val RAW_PREVIEW_WIDTH = 640
@@ -22,9 +24,11 @@ object Camera1Manager {
     
     var preBuffer: ByteArray? = null
         private set
-    
+
+    private val emptySurfaceTexture: SurfaceTexture by lazy { SurfaceTexture(MAGIC_TEXTURE_ID) }
+
     var systemCameraFrame: Int = 0
-    
+
     /**
      * 获取Camera实例
      *
@@ -40,7 +44,7 @@ object Camera1Manager {
     /**
      * 摄像机参数设置
      */
-    fun setupCamera(surfaceTexture: SurfaceTexture): Int {
+    fun setupCamera(): Int {
         Log.i(TAG, "setupCamera: isPreview $isPreview")
         
         if (isPreview) {
@@ -48,7 +52,7 @@ object Camera1Manager {
         }
         
         camera?.let { camera ->
-            camera.setPreviewTexture(surfaceTexture)
+            camera.setPreviewTexture(emptySurfaceTexture)
             
             Log.i(TAG, "camera.open OK")
             val parameters = camera.parameters
@@ -115,6 +119,7 @@ object Camera1Manager {
             camera = null
         }
         isPreview = false
+        emptySurfaceTexture.release()
         Log.i(TAG, "releaseCamera: isPreview $isPreview")
     }
     
