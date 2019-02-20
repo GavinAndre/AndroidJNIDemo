@@ -8,9 +8,9 @@ import android.util.Log
 object Camera1Manager {
     
     private val TAG = Camera1Manager::class.java.simpleName
-
+    
     private const val MAGIC_TEXTURE_ID = 10
-
+    
     const val PREVIEW_WIDTH = 480
     const val PREVIEW_HEIGHT = 640
     const val RAW_PREVIEW_WIDTH = 640
@@ -24,11 +24,11 @@ object Camera1Manager {
     
     var preBuffer: ByteArray? = null
         private set
-
+    
     private val emptySurfaceTexture: SurfaceTexture by lazy { SurfaceTexture(MAGIC_TEXTURE_ID) }
-
+    
     var systemCameraFrame: Int = 0
-
+    
     /**
      * 获取Camera实例
      *
@@ -60,9 +60,8 @@ object Camera1Manager {
             val supportedPictureSizes = parameters.supportedPictureSizes
             val size = supportedPreviewSizes.size
             for (i in 0 until size) {
-                Log.i(TAG, "setupCamera : supportedPreviewSizes " + i + " = " +
-                        supportedPreviewSizes[i].width + " x " +
-                        supportedPreviewSizes[i].height)
+                Log.i(TAG, "setupCamera : supportedPreviewSizes $i =" +
+                        " ${supportedPreviewSizes[i].width} x ${supportedPreviewSizes[i].height}")
                 if (supportedPreviewSizes[i].width == RAW_PREVIEW_WIDTH && supportedPreviewSizes[i].height == RAW_PREVIEW_HEIGHT) {
                     isProperResolution = true
                 }
@@ -86,7 +85,8 @@ object Camera1Manager {
             //需要在startPreview()之前调用
             //camera.setPreviewCallback(new StreamIt(""));
             camera.setPreviewCallbackWithBuffer(StreamIt())
-            val byteSize = parameters.previewSize.width * parameters.previewSize.height * ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8
+            val byteSize =
+                    parameters.previewSize.width * parameters.previewSize.height * ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8
             preBuffer = ByteArray(byteSize)
             camera.addCallbackBuffer(preBuffer)
             // 设置回调的类
@@ -123,6 +123,9 @@ object Camera1Manager {
         Log.i(TAG, "releaseCamera: isPreview $isPreview")
     }
     
+    /**
+     * 原始帧回调
+     */
     internal class StreamIt : Camera.PreviewCallback {
         
         override fun onPreviewFrame(data: ByteArray, camera: Camera) {
