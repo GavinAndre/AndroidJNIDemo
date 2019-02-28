@@ -65,14 +65,17 @@ bool V4LAchieve::OpenCamera() {
     delete[] chPCameraDevicename;
     chPCameraDevicename = NULL;
 
+    //查询视频设备参数
     if (!GetCameraParameters()) {
         V4L_LOGE("GetCameraParameters Fail");
         return false;
     }
+    //设置视频采集参数
     if (!SetCameraVideoFormat()) {
         V4L_LOGE("SetCameraVideoFormat Fail");
         return false;
     }
+    //开始视频的采集
     if (!StartCameraCapture()) {
         V4L_LOGI("StartCameraCapture Fail");
         return false;
@@ -255,7 +258,23 @@ bool V4LAchieve::CameraVideoGetLoop() {
     return true;
 }
 
+bool V4LAchieve::StopCameraCapture() {
+    if (miOpenedCameraFd < 0) return false;
+    enum v4l2_buf_type type;
+    type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+
+    //停止捕捉图像数据
+    if (-1 == ioctl(miOpenedCameraFd, VIDIOC_STREAMOFF, &type)) {
+        V4L_LOGI(" Stop VIDIOC_STREAMOFF failed \n");
+        return false;
+    }
+    V4L_LOGI("VIDIOC_STREAMOFF Stop collecting capture graph ok");
+    return true;
+}
+
 bool V4LAchieve::CloseCamera() {
+    //停止视频的采集
+    StopCameraCapture();
     //释放申请的视频帧缓冲区
     for (int index = 0; index < (mpstV4LBuffers ? miBufferCount : 0); index++)
         ::munmap(mpstV4LBuffers[index].pStart, mpstV4LBuffers[index].iLength);

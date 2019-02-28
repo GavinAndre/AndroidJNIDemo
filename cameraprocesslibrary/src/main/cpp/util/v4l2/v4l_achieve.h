@@ -59,6 +59,8 @@ private:
 
     bool StartCameraCapture();
 
+    bool StopCameraCapture();
+
 private:
     int miCameraIndex;
     int miOpenedCameraFd;    //default open camera ;
