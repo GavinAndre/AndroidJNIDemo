@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".base.MyApplication"
         android:allowBackup="true"
@@ -30,6 +32,7 @@
         <activity android:name=".activity.UsbCameraActivity" />
         <activity android:name=".activity.SystemCameraActivity" />
         <activity android:name=".activity.MatBitmapConvertActivity" />
+        <activity android:name=".activity.RtspActivity" />
     </application>
 
 </manifest>

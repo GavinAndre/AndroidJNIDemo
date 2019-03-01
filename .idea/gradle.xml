@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/cameraprocesslibrary" />
             <option value="$PROJECT_DIR$/imageprocesslibrary" />
+            <option value="$PROJECT_DIR$/rtsplibrary" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

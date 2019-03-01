@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.android["compileSdkVersion"]
+    buildToolsVersion rootProject.android["buildToolsVersion"]
+
+    defaultConfig {
+        minSdkVersion rootProject.android["minSdkVersion"]
+        targetSdkVersion rootProject.android["targetSdkVersion"]
+        versionCode rootProject.android["versionCode"]
+        versionName rootProject.android["versionName"]
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_ARM_NEON=TRUE", "-DCMAKE_BUILD_TYPE=Release"
+                cppFlags "-std=c++11"
+            }
+        }
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            jniDebuggable true
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation rootProject.ext.dependencies["appcompat-v7"]
+}

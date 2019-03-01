@@ -43,10 +43,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="MatBitmap互转"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnRtsp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnUsbCamera" />
+
+    <Button
+        android:id="@+id/btnRtsp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rtsp视频"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMatBitmapConvert" />
 
 </android.support.constraint.ConstraintLayout>
