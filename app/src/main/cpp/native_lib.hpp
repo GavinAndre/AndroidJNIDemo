@@ -1,4 +1,5 @@
 #include "utils/jni_lib.hpp"
+#include "utils/jni_list_lib.hpp"
 #include "utils/android_log.h"
 #include "utils/android_buf.hpp"
 #include "utils/uuid_lib.hpp"
@@ -24,8 +25,8 @@ void stringToJNI(JNIEnv *env, jstring &str) {
 }
 
 void listToJNI(JNIEnv *env, jobject &array_list) {
-    std::vector<std::string> result = array_list_to_vector(env, array_list);
-    for (std::string s: result) {
+    auto result = array_list_to_vector<std::string>(env, array_list);
+    for (const auto &s: result) {
         std::cout << s << std::endl;
     }
 }
