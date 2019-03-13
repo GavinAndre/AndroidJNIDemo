@@ -22,13 +22,53 @@ Java_com_gavinandre_jnidemo_NativeLib_stringToJNI(JNIEnv *env, jclass type, jstr
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_gavinandre_jnidemo_NativeLib_listToJNI(JNIEnv *env, jclass type, jobject array_list) {
-    listToJNI(env, array_list);
+Java_com_gavinandre_jnidemo_NativeLib_intListToJNI(JNIEnv *env, jclass type, jobject array_list) {
+    intListToJNI(env, array_list);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_doubleListToJNI(JNIEnv *env, jclass type, jobject array_list) {
+    doubleListToJNI(env, array_list);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_stringListToJNI(JNIEnv *env, jclass type, jobject array_list) {
+    stringListToJNI(env, array_list);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_simpleObjectListToJNI(JNIEnv *env, jclass type, jobject array_list) {
+    simpleObjectListToJNI(env, array_list);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_complexObjectListToJNI(JNIEnv *env, jclass type, jobject array_list) {
+    complexObjectListToJNI(env, array_list);
 }
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_gavinandre_jnidemo_NativeLib_listFromJNI(JNIEnv *env, jclass type) {
-    return listFromJNI(env);
+Java_com_gavinandre_jnidemo_NativeLib_intListFromJNI(JNIEnv *env, jclass type) {
+    return intListFromJNI(env);
+}
+
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_doubleListFromJNI(JNIEnv *env, jclass type) {
+    return doubleListFromJNI(env);
+}
+
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_stringListFromJNI(JNIEnv *env, jclass type) {
+    return stringListFromJNI(env);
+}
+
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_simpleObjectListFromJNI(JNIEnv *env, jclass type) {
+    return simpleObjectListFromJNI(env);
+}
+
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_gavinandre_jnidemo_NativeLib_complexObjectListFromJNI(JNIEnv *env, jclass type) {
+    return complexObjectListFromJNI(env);
 }
 
 extern "C" JNIEXPORT jstring JNICALL

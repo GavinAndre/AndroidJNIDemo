@@ -55,25 +55,25 @@ std::string java_to_native<std::string>(JNIEnv *env, jobject &element) {
 template<>
 simple_bean java_to_native<simple_bean>(JNIEnv *env, jobject &element) {
     jclass cls = env->FindClass("com/gavinandre/jnidemo/bean/SimpleBean");
-    jmethodID getVal = env->GetMethodID(cls, "getList", "()I");
+    jmethodID getVal = env->GetMethodID(cls, "getInteger", "()I");
     env->DeleteLocalRef(cls);
 
-    simple_bean _simple_bean;
-    _simple_bean.integer = env->CallIntMethod(element, getVal);
+    int value = env->CallIntMethod(element, getVal);
+    simple_bean _simple_bean(value);
     return _simple_bean;
 }
 
 template<>
 complex_bean java_to_native<complex_bean>(JNIEnv *env, jobject &element) {
     jclass cls = env->FindClass("com/gavinandre/jnidemo/bean/ComplexBean");
-    jmethodID getVal = env->GetMethodID(cls, "getInteger", "()I");
-    jmethodID getPath = env->GetMethodID(cls, "getList", "()Ljava/util/ArrayList;");
+    jmethodID getInteger = env->GetMethodID(cls, "getInteger", "()I");
+    jmethodID getList = env->GetMethodID(cls, "getList", "()Ljava/util/ArrayList;");
     env->DeleteLocalRef(cls);
 
     complex_bean _complex_bean;
-    _complex_bean.integer = env->CallIntMethod(element, getVal);
+    _complex_bean.integer = env->CallIntMethod(element, getInteger);
 
-    jobject list = env->CallObjectMethod(element, getPath);
+    jobject list = env->CallObjectMethod(element, getList);
 
     _complex_bean.list = array_list_to_vector<float>(env, list);
     return _complex_bean;
@@ -99,16 +99,94 @@ std::vector<_T> array_list_to_vector(JNIEnv *env, jobject &arrayList) {
     for (jint i = 0; i < len; i++) {
         // 调用get方法，获取jobject
         jobject element = env->CallObjectMethod(arrayList, java_util_ArrayList_get, i);
-        _T f = java_to_native<_T>(env, element);
-        env->DeleteLocalRef(element);
+        // 将jobject转换成c/c++类型
+        auto f = java_to_native<_T>(env, element);
+        // 放入victor中
         result.emplace_back(f);
+        // 删除局部引用
+        env->DeleteLocalRef(element);
     }
     // 删除全局引用
     env->DeleteGlobalRef(java_util_ArrayList);
     return result;
 }
 
-jobject vector_to_array_list(JNIEnv *env, std::vector<std::string> &vector) {
+template<class _T>
+jobject native_to_java(JNIEnv *env, _T &element);
+
+template<class _T>
+jobject vector_to_array_list(JNIEnv *env, std::vector<_T> &vector);
+
+template<class _T>
+jobject native_to_java(JNIEnv *env, int &element) {
+    jclass cls = env->FindClass("java/lang/Integer");
+    jmethodID init = env->GetMethodID(cls, "<init>", "(I)V");
+    jobject result = env->NewObject(cls, init, element);
+    env->DeleteLocalRef(cls);
+    return result;
+}
+
+template<class _T>
+jobject native_to_java(JNIEnv *env, long &element) {
+    jclass cls = env->FindClass("java/lang/Long");
+    jmethodID init = env->GetMethodID(cls, "<init>", "(J)V");
+    jobject result = env->NewObject(cls, init, element);
+    env->DeleteLocalRef(cls);
+    return result;
+}
+
+template<class _T>
+jobject native_to_java(JNIEnv *env, float &element) {
+    jclass cls = env->FindClass("java/lang/Float");
+    jmethodID init = env->GetMethodID(cls, "<init>", "(F)V");
+    jobject result = env->NewObject(cls, init, element);
+    env->DeleteLocalRef(cls);
+    return result;
+}
+
+template<class _T>
+jobject native_to_java(JNIEnv *env, double &element) {
+    jclass cls = env->FindClass("java/lang/Double");
+    jmethodID init = env->GetMethodID(cls, "<init>", "(D)V");
+    jobject result = env->NewObject(cls, init, element);
+    env->DeleteLocalRef(cls);
+    return result;
+}
+
+template<class _T>
+jobject native_to_java(JNIEnv *env, std::string &element) {
+    return env->NewStringUTF(element.c_str());
+}
+
+template<class _T>
+jobject native_to_java(JNIEnv *env, simple_bean &element) {
+    jclass cls = env->FindClass("com/gavinandre/jnidemo/bean/SimpleBean");
+    jmethodID init = env->GetMethodID(cls, "<init>", "(I)V");
+    jobject result = env->NewObject(cls, init, element);
+    env->DeleteLocalRef(cls);
+    return result;
+}
+
+template<class _T>
+jobject native_to_java(JNIEnv *env, complex_bean &element) {
+    jclass cls = env->FindClass("com/gavinandre/jnidemo/bean/ComplexBean");
+    jmethodID init = env->GetMethodID(cls, "<init>", "()V");
+    jmethodID setInteger = env->GetMethodID(cls, "setInteger", "(I)V");
+    jmethodID setList = env->GetMethodID(cls, "setList", "(Ljava/util/ArrayList;)V");
+
+    jobject result = env->NewObject(cls, init);
+    env->CallVoidMethod(result, setInteger, element.integer);
+
+    jobject list = vector_to_array_list<float>(env, element.list);
+    env->CallVoidMethod(result, setList, list);
+    env->DeleteLocalRef(list);
+
+    env->DeleteLocalRef(cls);
+    return result;
+}
+
+template<class _T>
+jobject vector_to_array_list(JNIEnv *env, std::vector<_T> &vector) {
     //先找到要调用的类，ArrayList，这里使用全局引用，也可以使用局部引用
     jclass java_util_ArrayList = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/util/ArrayList")));
     // 获取java方法id
@@ -120,12 +198,12 @@ jobject vector_to_array_list(JNIEnv *env, std::vector<std::string> &vector) {
     // 调用构造函数创建ArrayList对象
     jobject result = env->NewObject(java_util_ArrayList, java_util_ArrayList_, vector.size());
     // 遍历vector
-    for (std::string s: vector) {
-        // string转jstring
-        jstring element = env->NewStringUTF(s.c_str());
-        // 调用add方法，将jstring添加到arrayList中
+    for (auto &v: vector) {
+        // c/c++类型转jobject
+        auto element = native_to_java<_T>(env, v);
+        // 调用add方法，将jobject添加到arrayList中
         env->CallBooleanMethod(result, java_util_ArrayList_add, element);
-        // 删除jstring引用
+        // 删除局部引用
         env->DeleteLocalRef(element);
     }
     // 删除全局引用

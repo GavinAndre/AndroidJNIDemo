@@ -1,5 +1,8 @@
 package com.gavinandre.jnidemo;
 
+import com.gavinandre.jnidemo.bean.ComplexBean;
+import com.gavinandre.jnidemo.bean.SimpleBean;
+
 import java.util.ArrayList;
 
 public class NativeLib {
@@ -16,9 +19,25 @@ public class NativeLib {
 
     public static native void stringToJNI(String string);
 
-    public static native void listToJNI(ArrayList list);
+    public static native void intListToJNI(ArrayList list);
 
-    public static native ArrayList<String> listFromJNI();
+    public static native void doubleListToJNI(ArrayList list);
+
+    public static native void stringListToJNI(ArrayList list);
+
+    public static native void simpleObjectListToJNI(ArrayList list);
+
+    public static native void complexObjectListToJNI(ArrayList list);
+
+    public static native ArrayList<Integer> intListFromJNI();
+
+    public static native ArrayList<Double> doubleListFromJNI();
+
+    public static native ArrayList<String> stringListFromJNI();
+
+    public static native ArrayList<SimpleBean> simpleObjectListFromJNI();
+
+    public static native ArrayList<ComplexBean> complexObjectListFromJNI();
 
     public static native String uuidFromJNI();
 
