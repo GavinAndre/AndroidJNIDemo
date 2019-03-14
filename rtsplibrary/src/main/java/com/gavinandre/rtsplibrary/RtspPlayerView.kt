@@ -40,7 +40,7 @@ class RtspPlayerView : TextureView, TextureView.SurfaceTextureListener, NativeCa
     private fun initRtsp(): Job {
         // 启动一个新协程并保持对这个作业的引用
         return GlobalScope.launch {
-            initRtspClient()
+            rtspClient = RtspClient(this@RtspPlayerView)
             while (isActive) {
                 if (rtspClient.play(endpoint) == 0) {
                     break
@@ -49,11 +49,6 @@ class RtspPlayerView : TextureView, TextureView.SurfaceTextureListener, NativeCa
             }
             Log.i(TAG, "initRtsp: coroutine finish")
         }
-    }
-
-    private fun initRtspClient() {
-        Log.i(TAG, "initRtspClient: ")
-        rtspClient = RtspClient(this)
     }
 
     override fun onFrame(frame: ByteArray, nChannel: Int, width: Int, height: Int) {
@@ -75,7 +70,7 @@ class RtspPlayerView : TextureView, TextureView.SurfaceTextureListener, NativeCa
             setPixels(pixels, 0, width, 0, 0, width, height)
             drawBitmap(this)
         } ?: apply {
-            bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
         }
     }
 
