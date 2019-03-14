@@ -12,14 +12,15 @@ class RtspPlayerView : TextureView, TextureView.SurfaceTextureListener, NativeCa
 
     private val TAG = RtspPlayerView::class.java.simpleName
 
-    private val endpoint = "rtsp://192.168.3.5:554/user=admin&password=&channel=1&stream=1.sdp?real_stream"
-    // private String endpoint = "rtsp://192.168.1.123:8554/test";
+    private var endpoint: String? = null
 
     private lateinit var rtspClient: RtspClient
     private var mDstRect: Rect
     private var bmp: Bitmap? = null
     private var isStop: Boolean = false
     private lateinit var job: Job
+
+    private var rtspEndpointListener: RtspEndpointInterface? = null
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -93,6 +94,12 @@ class RtspPlayerView : TextureView, TextureView.SurfaceTextureListener, NativeCa
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         Log.i(TAG, "onSurfaceTextureAvailable: ")
+        endpoint = rtspEndpointListener
+            ?.rtspEndpoint
+            ?: let {
+                Log.e(TAG, "init: rtsp endpoint is null")
+                return
+            }
         isStop = false
         mDstRect.set(0, 0, getWidth(), getWidth())
         job = initRtsp()
@@ -114,6 +121,10 @@ class RtspPlayerView : TextureView, TextureView.SurfaceTextureListener, NativeCa
 
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
         // Log.i(TAG, "onSurfaceTextureUpdated: ");
+    }
+
+    fun setRtspEndpointListener(rtspEndpointListener: RtspEndpointInterface) {
+        this.rtspEndpointListener = rtspEndpointListener
     }
 
 }

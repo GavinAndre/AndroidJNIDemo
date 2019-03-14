@@ -50,7 +50,7 @@ jint Java_com_gavinandre_rtsplibrary_RtspClient_play(
 //        av_dict_set(&option, "buffer_size", "1024000", 0);
 //        av_dict_set(&option, "max_delay", "500000", 0);
 //        av_dict_set(&option, "stimeout", "20000000", 0);  //设置超时断开连接时间
-        av_dict_set(&option, "rtsp_transport", "tcp", 0); //以udp方式打开，如果以tcp方式打开将udp替换为tcp
+        av_dict_set(&option, "rtsp_transport", "udp", 0); //以udp方式打开，如果以tcp方式打开将udp替换为tcp
 
         const char *rtspUrl = env->GetStringUTFChars(endpoint, JNI_FALSE);
         //打开网络流或文件
