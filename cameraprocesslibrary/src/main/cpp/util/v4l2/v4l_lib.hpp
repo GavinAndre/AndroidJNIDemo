@@ -10,8 +10,10 @@ int getVideoId() {
     DIR *dp;
     struct dirent *dirp;
     //    cout<<dirname<<endl;
-    if ((dp = opendir(dirname.c_str())) == NULL)
+    if ((dp = opendir(dirname.c_str())) == NULL){
         LOGE("Can't open %s", dirname.c_str());
+        return -1;
+    }
 
     std::regex reg_dev("video+[0-9]\d*", std::regex::icase);
     while ((dirp = readdir(dp)) != NULL) {

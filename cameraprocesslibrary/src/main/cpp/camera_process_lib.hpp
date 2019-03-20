@@ -31,7 +31,12 @@ int prepareUsbCamera(int width, int height) {
     PREVIEW_IMG_WIDTH = width;
     PREVIEW_IMG_HEIGHT = height;
     if (oV4LAchieve == nullptr) {
-        oV4LAchieve = new V4LAchieve(getVideoId(), IMG_WIDTH, IMG_HEIGHT);
+        int videoId = getVideoId();
+        if (videoId == -1) {
+            LOGE("getVideoId ERROR");
+            return JNI_ERR;
+        }
+        oV4LAchieve = new V4LAchieve(videoId, IMG_WIDTH, IMG_HEIGHT);
         if (!oV4LAchieve->OpenCamera()) {
             LOGE("V4LAchieve OpenCamera ERROR");
             return JNI_ERR;
