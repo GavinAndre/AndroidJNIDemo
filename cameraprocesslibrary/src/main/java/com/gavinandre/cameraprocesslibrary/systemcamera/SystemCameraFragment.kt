@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import com.gavinandre.cameraprocesslibrary.R
 import com.gavinandre.cameraprocesslibrary.utils.Camera1Manager
 import kotlinx.android.synthetic.main.fragment_system_camera.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class SystemCameraFragment : Fragment() {
 
@@ -48,7 +45,7 @@ class SystemCameraFragment : Fragment() {
 
     private fun initData() {
         job = GlobalScope.launch {
-            repeat(Int.MAX_VALUE) {
+            while (isActive) {
                 Log.i(TAG, "run: drawFrame" + SystemCameraTextureView.drawFrame)
                 Log.i(TAG, "run: cameraFrame " + Camera1Manager.systemCameraFrame)
                 SystemCameraTextureView.drawFrame = 0

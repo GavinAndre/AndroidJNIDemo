@@ -18,7 +18,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
         var drawFrame: Int = 0
     }
 
-    private lateinit var job: Job
+    private var job: Job? = null
     
     private val mBitmap: Bitmap by lazy {
         Bitmap.createBitmap(Camera1Manager.PREVIEW_WIDTH, Camera1Manager.PREVIEW_HEIGHT,
@@ -28,7 +28,8 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     private val mSrcRect: Rect by lazy { Rect(0, 0, mBitmap.width, mBitmap.height) }
     private val mDstRect: Rect by lazy { Rect(0, 0, width, height) }
 
-    @JvmOverloads
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attributeSet: AttributeSet? = null) : super(context, attributeSet)
     constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
             : super(context, attributeSet, defStyleAttr)
     
@@ -55,7 +56,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
             return
         }
         //开启协程
-        job = processImageJob()
+        job = processSystemCameraJob()
     }
     
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
@@ -64,7 +65,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
         Log.i(TAG, "onSurfaceTextureDestroyed: ")
-        job.cancel()
+        job?.cancel()
         Camera1Manager.releaseCamera()
         CameraProcessLib.releaseSystemCamera()
         releaseBitmap()
@@ -81,7 +82,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
         }
     }
 
-    private fun processImageJob(): Job {
+    private fun processSystemCameraJob(): Job {
         // 启动一个新协程并保持对这个作业的引用
         return GlobalScope.launch {
             while (isActive) {

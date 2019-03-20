@@ -8,10 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.gavinandre.cameraprocesslibrary.R
 import kotlinx.android.synthetic.main.fragment_usb_camera.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class UsbCameraFragment : Fragment() {
 
@@ -47,7 +44,7 @@ class UsbCameraFragment : Fragment() {
 
     private fun initData() {
         job = GlobalScope.launch {
-            repeat(Int.MAX_VALUE) {
+            while (isActive) {
                 Log.i(TAG, "run: drawFrame" + UsbCameraTextureView.drawFrame)
                 UsbCameraTextureView.drawFrame = 0
                 delay(1000L)
