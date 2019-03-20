@@ -2,13 +2,13 @@ package com.gavinandre.cameraprocesslibrary.systemcamera
 
 import android.content.Context
 import android.graphics.*
-import android.os.SystemClock
 import android.util.AttributeSet
 import android.util.Log
 import android.view.TextureView
 import android.widget.Toast
 import com.gavinandre.cameraprocesslibrary.CameraProcessLib
 import com.gavinandre.cameraprocesslibrary.utils.Camera1Manager
+import kotlinx.coroutines.*
 
 class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener {
     
@@ -17,8 +17,8 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     companion object {
         var drawFrame: Int = 0
     }
-    
-    private var stop: Boolean = false
+
+    private lateinit var job: Job
     
     private val mBitmap: Bitmap by lazy {
         Bitmap.createBitmap(Camera1Manager.PREVIEW_WIDTH, Camera1Manager.PREVIEW_HEIGHT,
@@ -54,9 +54,8 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
             Toast.makeText(context, "算法初始化失败", Toast.LENGTH_SHORT).show()
             return
         }
-        //开启线程
-        val mPlayThread = PlayThread()
-        mPlayThread.start()
+        //开启协程
+        job = processImageJob()
     }
     
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
@@ -65,10 +64,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
         Log.i(TAG, "onSurfaceTextureDestroyed: ")
-        stop = true
-        while (stop) {
-            SystemClock.sleep(50)
-        }
+        job.cancel()
         Camera1Manager.releaseCamera()
         CameraProcessLib.releaseSystemCamera()
         releaseBitmap()
@@ -84,19 +80,16 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
             mBitmap.recycle()
         }
     }
-    
-    private inner class PlayThread : Thread() {
-        override fun run() {
-            while (true) {
-                if (stop) {
-                    stop = false
-                    break
-                }
-                SystemClock.sleep(3)
+
+    private fun processImageJob(): Job {
+        // 启动一个新协程并保持对这个作业的引用
+        return GlobalScope.launch {
+            while (isActive) {
                 val frame = Camera1Manager.preBuffer
                 CameraProcessLib.processSystemCamera(frame)
                 CameraProcessLib.pixelToBmp(mBitmap)
                 drawBitmap(mBitmap)
+                delay(5L)
             }
         }
     }
