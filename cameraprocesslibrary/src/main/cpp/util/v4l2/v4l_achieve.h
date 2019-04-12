@@ -55,6 +55,8 @@ public:
 private:
     bool GetCameraParameters();
 
+    bool GetCameraVideoFormat();
+
     bool SetCameraVideoFormat();
 
     bool StartCameraCapture();

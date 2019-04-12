@@ -70,6 +70,11 @@ bool V4LAchieve::OpenCamera() {
         V4L_LOGE("GetCameraParameters Fail");
         return false;
     }
+    //查询视频采集参数
+    if (!GetCameraVideoFormat()) {
+        V4L_LOGE("GetCameraVideoFormat Fail");
+        return false;
+    }
     //设置视频采集参数
     if (!SetCameraVideoFormat()) {
         V4L_LOGE("SetCameraVideoFormat Fail");
@@ -101,6 +106,31 @@ bool V4LAchieve::GetCameraParameters() {
     V4L_LOGI("Camera Name: %s", stV4l2Capability.card);
     V4L_LOGI("Camera Kernel Version: %d", stV4l2Capability.version);
     V4L_LOGI("Camera Driver Info: %s", stV4l2Capability.driver);
+    return true;
+}
+
+//get camera capture property
+bool V4LAchieve::GetCameraVideoFormat() {
+    if (miOpenedCameraFd < 0) {
+        V4L_LOGE("Invalid Camera File Descriptor");
+        return false;
+    }
+    enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    struct v4l2_fmtdesc fmt_1;
+    struct v4l2_frmsizeenum frmsize;
+    fmt_1.index = 0;
+    fmt_1.type = type;
+    while (ioctl(miOpenedCameraFd, VIDIOC_ENUM_FMT, &fmt_1) >= 0) {
+        frmsize.pixel_format = fmt_1.pixelformat;
+        frmsize.index = 0;
+        while (ioctl(miOpenedCameraFd, VIDIOC_ENUM_FRAMESIZES, &frmsize) >= 0) {
+            V4L_LOGI("camera Capture format: %s, resolution: %dx%d", fmt_1.description,
+                     frmsize.discrete.width,
+                     frmsize.discrete.height);
+            frmsize.index++;
+        }
+        fmt_1.index++;
+    }
     return true;
 }
 
