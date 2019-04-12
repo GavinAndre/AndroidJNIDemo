@@ -11,20 +11,22 @@ import com.gavinandre.cameraprocesslibrary.utils.Camera1Manager
 import kotlinx.coroutines.*
 
 class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener {
-    
+
     private val TAG = SystemCameraTextureView::class.java.simpleName
-    
+
     companion object {
         var drawFrame: Int = 0
     }
 
     private var job: Job? = null
-    
+
     private val mBitmap: Bitmap by lazy {
-        Bitmap.createBitmap(Camera1Manager.PREVIEW_WIDTH, Camera1Manager.PREVIEW_HEIGHT,
-                Bitmap.Config.ARGB_8888)
+        Bitmap.createBitmap(
+            Camera1Manager.PREVIEW_WIDTH, Camera1Manager.PREVIEW_HEIGHT,
+            Bitmap.Config.ARGB_8888
+        )
     }
-    
+
     private val mSrcRect: Rect by lazy { Rect(0, 0, mBitmap.width, mBitmap.height) }
     private val mDstRect: Rect by lazy { Rect(0, 0, width, height) }
 
@@ -32,7 +34,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     constructor(context: Context, attributeSet: AttributeSet? = null) : super(context, attributeSet)
     constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
             : super(context, attributeSet, defStyleAttr)
-    
+
     init {
         //设置背景透明，记住这里是[是否不透明]
         isOpaque = false
@@ -40,7 +42,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
         surfaceTextureListener = this
         Log.i(TAG, "init: ")
     }
-    
+
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         //打开相机
         Camera1Manager.openCamera(1)
@@ -58,43 +60,45 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
         //开启协程
         job = processSystemCameraJob()
     }
-    
+
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
         Log.i(TAG, "onSurfaceTextureSizeChanged: ")
     }
-    
+
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
         Log.i(TAG, "onSurfaceTextureDestroyed: ")
-        job?.cancel()
+        stopSystemCameraJob()
         Camera1Manager.releaseCamera()
         CameraProcessLib.releaseSystemCamera()
         releaseBitmap()
         return true
     }
-    
+
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
         // Log.i(TAG, "onSurfaceTextureUpdated: ");
     }
-    
+
     private fun releaseBitmap() {
         if (!mBitmap.isRecycled) {
             mBitmap.recycle()
         }
     }
 
-    private fun processSystemCameraJob(): Job {
+    private fun processSystemCameraJob(): Job = GlobalScope.launch {
         // 启动一个新协程并保持对这个作业的引用
-        return GlobalScope.launch {
-            while (isActive) {
-                val frame = Camera1Manager.preBuffer
-                CameraProcessLib.processSystemCamera(frame)
-                CameraProcessLib.pixelToBmp(mBitmap)
-                drawBitmap(mBitmap)
-                delay(5L)
-            }
+        while (isActive) {
+            val frame = Camera1Manager.preBuffer
+            CameraProcessLib.processSystemCamera(frame)
+            CameraProcessLib.pixelToBmp(mBitmap)
+            drawBitmap(mBitmap)
+            delay(5L)
         }
     }
-    
+
+    private fun stopSystemCameraJob() = runBlocking {
+        job?.cancelAndJoin()
+    }
+
     private fun drawBitmap(bitmap: Bitmap) {
         // Log.i(TAG, "drawBitmap: ");
         //锁定画布
@@ -103,13 +107,11 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
             //清空画布
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             //将bitmap画到画布上
-            if (!bitmap.isRecycled) {
-                canvas.drawBitmap(bitmap, mSrcRect, mDstRect, null)
-            }
+            canvas.drawBitmap(bitmap, mSrcRect, mDstRect, null)
             //解锁画布同时提交
             unlockCanvasAndPost(canvas)
         }
         drawFrame++
     }
-    
+
 }

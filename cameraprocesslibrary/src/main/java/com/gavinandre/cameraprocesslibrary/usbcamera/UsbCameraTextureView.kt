@@ -7,10 +7,7 @@ import android.util.Log
 import android.view.TextureView
 import android.widget.Toast
 import com.gavinandre.cameraprocesslibrary.CameraProcessLib
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class UsbCameraTextureView : TextureView, TextureView.SurfaceTextureListener {
 
@@ -64,7 +61,7 @@ class UsbCameraTextureView : TextureView, TextureView.SurfaceTextureListener {
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
         Log.i(TAG, "onSurfaceTextureDestroyed: ")
-        job?.cancel()
+        stopUsbCameraJob()
         CameraProcessLib.releaseUsbCamera()
         releaseBitmap()
         return true
@@ -80,16 +77,18 @@ class UsbCameraTextureView : TextureView, TextureView.SurfaceTextureListener {
         }
     }
 
-    private fun processUsbCameraJob(): Job {
+    private fun processUsbCameraJob(): Job = GlobalScope.launch {
         // 启动一个新协程并保持对这个作业的引用
-        return GlobalScope.launch {
-            while (isActive) {
-                CameraProcessLib.processUsbCamera()
-                CameraProcessLib.pixelToBmp(mBitmap)
-                drawBitmap(mBitmap)
-                // SystemClock.sleep(2);
-            }
+        while (isActive) {
+            CameraProcessLib.processUsbCamera()
+            CameraProcessLib.pixelToBmp(mBitmap)
+            drawBitmap(mBitmap)
+            // SystemClock.sleep(2);
         }
+    }
+
+    private fun stopUsbCameraJob() = runBlocking {
+        job?.cancelAndJoin()
     }
 
     private fun drawBitmap(bitmap: Bitmap) {
@@ -100,9 +99,7 @@ class UsbCameraTextureView : TextureView, TextureView.SurfaceTextureListener {
             //清空画布
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             //将bitmap画到画布上
-            if (!bitmap.isRecycled) {
-                canvas.drawBitmap(bitmap, mSrcRect, mDstRect, null)
-            }
+            canvas.drawBitmap(bitmap, mSrcRect, mDstRect, null)
             //解锁画布同时提交
             unlockCanvasAndPost(canvas)
         }
