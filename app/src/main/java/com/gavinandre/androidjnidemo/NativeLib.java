@@ -1,7 +1,7 @@
-package com.gavinandre.jnidemo;
+package com.gavinandre.androidjnidemo;
 
-import com.gavinandre.jnidemo.bean.ComplexBean;
-import com.gavinandre.jnidemo.bean.SimpleBean;
+import com.gavinandre.androidjnidemo.bean.ComplexBean;
+import com.gavinandre.androidjnidemo.bean.SimpleBean;
 
 import java.util.ArrayList;
 

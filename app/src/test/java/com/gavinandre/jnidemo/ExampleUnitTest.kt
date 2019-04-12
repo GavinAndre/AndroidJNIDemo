@@ -1,4 +1,4 @@
-package com.gavinandre.jnidemo
+package com.gavinandre.androidjnidemo
 
 import org.junit.Test
 

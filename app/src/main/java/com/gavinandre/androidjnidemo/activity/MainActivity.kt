@@ -1,10 +1,10 @@
-package com.gavinandre.jnidemo.activity
+package com.gavinandre.androidjnidemo.activity
 
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.gavinandre.jnidemo.R
+import com.gavinandre.androidjnidemo.R
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog

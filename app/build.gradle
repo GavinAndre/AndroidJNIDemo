@@ -7,7 +7,7 @@ android {
     buildToolsVersion rootProject.android["buildToolsVersion"]
 
     defaultConfig {
-        applicationId "com.gavinandre.jnidemo"
+        applicationId "com.gavinandre.androidjnidemo"
         minSdkVersion rootProject.android["minSdkVersion"]
         targetSdkVersion rootProject.android["targetSdkVersion"]
         versionCode rootProject.android["versionCode"]

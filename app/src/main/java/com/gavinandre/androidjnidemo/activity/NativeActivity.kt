@@ -1,12 +1,12 @@
-package com.gavinandre.jnidemo.activity
+package com.gavinandre.androidjnidemo.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.gavinandre.jnidemo.NativeLib
-import com.gavinandre.jnidemo.R
-import com.gavinandre.jnidemo.bean.ComplexBean
-import com.gavinandre.jnidemo.bean.SimpleBean
+import com.gavinandre.androidjnidemo.NativeLib
+import com.gavinandre.androidjnidemo.R
+import com.gavinandre.androidjnidemo.bean.ComplexBean
+import com.gavinandre.androidjnidemo.bean.SimpleBean
 import kotlinx.android.synthetic.main.activity_native.*
 
 class NativeActivity : AppCompatActivity() {

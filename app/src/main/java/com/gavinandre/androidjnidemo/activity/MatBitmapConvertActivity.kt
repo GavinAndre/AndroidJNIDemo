@@ -1,4 +1,4 @@
-package com.gavinandre.jnidemo.activity
+package com.gavinandre.androidjnidemo.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -6,8 +6,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.gavinandre.imageprocesslibrary.ImageProcess
-import com.gavinandre.jnidemo.R
-import com.gavinandre.jnidemo.utils.FileUtil
+import com.gavinandre.androidjnidemo.R
+import com.gavinandre.androidjnidemo.utils.FileUtil
 import kotlinx.android.synthetic.main.activity_mat_bitmap_convert.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

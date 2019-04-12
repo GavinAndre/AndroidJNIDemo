@@ -1,4 +1,4 @@
-package com.gavinandre.jnidemo.base
+package com.gavinandre.androidjnidemo.base
 
 import android.app.Application
 import kotlin.properties.ReadWriteProperty

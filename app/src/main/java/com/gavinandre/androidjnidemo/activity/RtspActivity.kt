@@ -1,8 +1,8 @@
-package com.gavinandre.jnidemo.activity
+package com.gavinandre.androidjnidemo.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.gavinandre.jnidemo.R
+import com.gavinandre.androidjnidemo.R
 import com.gavinandre.rtsplibrary.RtspEndpointInterface
 import kotlinx.android.synthetic.main.activity_rtsp.*
 

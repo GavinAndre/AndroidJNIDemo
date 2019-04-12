@@ -124,7 +124,7 @@ jstring uuidFromJNI(JNIEnv *env) {
 
 jstring getSDPath(JNIEnv *env) {
     std::string sd_path = callJavaStaticMethod(
-            env, "com/gavinandre/jnidemo/utils/FileUtil", "getSDPath", "()Ljava/lang/String;");
+            env, "com/gavinandre/androidjnidemo/utils/FileUtil", "getSDPath", "()Ljava/lang/String;");
     return string_to_jstring(env, sd_path);
 }
 

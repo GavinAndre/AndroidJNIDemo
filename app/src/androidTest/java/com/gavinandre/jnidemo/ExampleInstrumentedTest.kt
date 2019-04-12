@@ -1,4 +1,4 @@
-package com.gavinandre.jnidemo
+package com.gavinandre.androidjnidemo
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.gavinandre.jnidemo", appContext.packageName)
+        assertEquals("com.gavinandre.androidjnidemo", appContext.packageName)
     }
 }

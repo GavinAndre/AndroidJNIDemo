@@ -70,7 +70,7 @@ std::string java_to_native(JNIEnv *env, jobject &element) {
 
 template<>
 simple_bean java_to_native<simple_bean>(JNIEnv *env, jobject &element) {
-    jclass cls = env->FindClass("com/gavinandre/jnidemo/bean/SimpleBean");
+    jclass cls = env->FindClass("com/gavinandre/androidjnidemo/bean/SimpleBean");
     jmethodID getVal = env->GetMethodID(cls, "getInteger", "()I");
     env->DeleteLocalRef(cls);
     int value = env->CallIntMethod(element, getVal);
@@ -81,7 +81,7 @@ simple_bean java_to_native<simple_bean>(JNIEnv *env, jobject &element) {
 template<>
 complex_bean java_to_native(JNIEnv *env, jobject &element) {
     //查找要调用的类
-    jclass cls = env->FindClass("com/gavinandre/jnidemo/bean/ComplexBean");
+    jclass cls = env->FindClass("com/gavinandre/androidjnidemo/bean/ComplexBean");
     //获取java方法id
     jmethodID getInteger = env->GetMethodID(cls, "getInteger", "()I");
     jmethodID getList = env->GetMethodID(cls, "getList", "()Ljava/util/ArrayList;");
@@ -177,7 +177,7 @@ jobject native_to_java(JNIEnv *env, std::string &element) {
 
 template<>
 jobject native_to_java(JNIEnv *env, simple_bean &element) {
-    jclass cls = env->FindClass("com/gavinandre/jnidemo/bean/SimpleBean");
+    jclass cls = env->FindClass("com/gavinandre/androidjnidemo/bean/SimpleBean");
     jmethodID init = env->GetMethodID(cls, "<init>", "(I)V");
     jobject result = env->NewObject(cls, init, element);
     env->DeleteLocalRef(cls);
@@ -187,7 +187,7 @@ jobject native_to_java(JNIEnv *env, simple_bean &element) {
 template<>
 jobject native_to_java(JNIEnv *env, complex_bean &element) {
     //查找要调用的类
-    jclass cls = env->FindClass("com/gavinandre/jnidemo/bean/ComplexBean");
+    jclass cls = env->FindClass("com/gavinandre/androidjnidemo/bean/ComplexBean");
     //获取java方法id
     jmethodID init = env->GetMethodID(cls, "<init>", "()V");
     jmethodID setInteger = env->GetMethodID(cls, "setInteger", "(I)V");

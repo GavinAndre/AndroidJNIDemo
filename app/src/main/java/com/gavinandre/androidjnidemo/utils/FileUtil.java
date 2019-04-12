@@ -1,4 +1,4 @@
-package com.gavinandre.jnidemo.utils;
+package com.gavinandre.androidjnidemo.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
