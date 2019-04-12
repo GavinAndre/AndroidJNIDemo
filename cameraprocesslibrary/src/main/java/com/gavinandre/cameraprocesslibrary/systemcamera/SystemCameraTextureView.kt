@@ -103,7 +103,9 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
             //清空画布
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             //将bitmap画到画布上
-            canvas.drawBitmap(bitmap, mSrcRect, mDstRect, null)
+            if (!bitmap.isRecycled) {
+                canvas.drawBitmap(bitmap, mSrcRect, mDstRect, null)
+            }
             //解锁画布同时提交
             unlockCanvasAndPost(canvas)
         }

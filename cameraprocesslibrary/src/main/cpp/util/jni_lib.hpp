@@ -39,6 +39,7 @@ void pixel2Bmp(JNIEnv *env, jobject &bitmap, void *data) {
 
     if ((ret = AndroidBitmap_lockPixels(env, bitmap, &pixels)) < 0) {
         LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
+        return;
     }
 
     memcpy(pixels, data, (size_t) (width * height * 4));
