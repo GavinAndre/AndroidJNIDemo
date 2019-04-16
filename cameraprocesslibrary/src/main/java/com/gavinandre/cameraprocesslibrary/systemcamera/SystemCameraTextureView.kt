@@ -23,7 +23,7 @@ class SystemCameraTextureView : TextureView, TextureView.SurfaceTextureListener 
     private val mBitmap: Bitmap by lazy {
         Bitmap.createBitmap(
             Camera1Manager.PREVIEW_WIDTH, Camera1Manager.PREVIEW_HEIGHT,
-            Bitmap.Config.ARGB_8888
+            Bitmap.Config.RGB_565
         )
     }
 

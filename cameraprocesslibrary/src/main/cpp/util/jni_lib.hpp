@@ -15,7 +15,7 @@ std::string jstring_to_string(JNIEnv *env, jstring &j_str) {
     return c_str;
 }
 
-void pixel2Bmp(JNIEnv *env, jobject &bitmap, void *data) {
+void pixel2Bmp(JNIEnv *env, jobject &bitmap, void *data, int channels) {
 
     AndroidBitmapInfo info;
     void *pixels;
@@ -32,8 +32,9 @@ void pixel2Bmp(JNIEnv *env, jobject &bitmap, void *data) {
     //    LOGI("pixel2Bmp width %d", width);
     //    LOGI("pixel2Bmp height %d", height);
 
-    if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-        LOGE("Bitmap format is not RGBA_8888 !");
+    if (info.format != ANDROID_BITMAP_FORMAT_RGB_565 &&
+        info.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        LOGE("Bitmap format is not RGB_565 or RGBA_8888!");
         return;
     }
 
@@ -42,7 +43,7 @@ void pixel2Bmp(JNIEnv *env, jobject &bitmap, void *data) {
         return;
     }
 
-    memcpy(pixels, data, (size_t) (width * height * 4));
+    memcpy(pixels, data, (size_t) (width * height * channels));
 
     AndroidBitmap_unlockPixels(env, bitmap);
 }

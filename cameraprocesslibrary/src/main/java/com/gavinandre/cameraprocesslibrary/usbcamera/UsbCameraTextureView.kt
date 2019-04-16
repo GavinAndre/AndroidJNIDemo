@@ -24,7 +24,7 @@ class UsbCameraTextureView : TextureView, TextureView.SurfaceTextureListener {
     private val mBitmap: Bitmap by lazy {
         Bitmap.createBitmap(
             PREVIEW_WIDTH, PREVIEW_HEIGHT,
-            Bitmap.Config.ARGB_8888
+            Bitmap.Config.RGB_565
         )
     }
 
