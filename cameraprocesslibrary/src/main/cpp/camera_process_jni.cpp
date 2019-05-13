@@ -20,6 +20,12 @@ Java_com_gavinandre_cameraprocesslibrary_CameraProcessLib_processSystemCamera(
 }
 
 extern "C" JNIEXPORT void JNICALL
+Java_com_gavinandre_cameraprocesslibrary_CameraProcessLib_processSystemCamera1(
+        JNIEnv *env, jclass type, jbyteArray yuv) {
+    processSystemCamera1(env, yuv);
+}
+
+extern "C" JNIEXPORT void JNICALL
 Java_com_gavinandre_cameraprocesslibrary_CameraProcessLib_processUsbCamera
         (JNIEnv *env, jclass type) {
     processUsbCamera();
@@ -29,6 +35,12 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_gavinandre_cameraprocesslibrary_CameraProcessLib_pixelToBmp(
         JNIEnv *env, jclass type, jobject bitmap) {
     pixelToBmp(env, bitmap);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_gavinandre_cameraprocesslibrary_CameraProcessLib_pixelToBmp1(
+        JNIEnv *env, jclass type, jobject bitmap) {
+    pixelToBmp1(env, bitmap);
 }
 
 extern "C" JNIEXPORT void JNICALL

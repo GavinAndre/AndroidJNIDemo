@@ -11,7 +11,7 @@
 
 int IMG_WIDTH, IMG_HEIGHT, PREVIEW_IMG_WIDTH, PREVIEW_IMG_HEIGHT;
 
-cv::Mat row_frame, preview_frame;
+cv::Mat row_frame, row_frame1, preview_frame, preview_frame1;
 
 V4LAchieve *oV4LAchieve;
 
@@ -58,10 +58,31 @@ void processSystemCamera(JNIEnv *env, jbyteArray &yuv) {
     // flipCode == 0 垂直翻转（沿X轴翻转），
     // flipCode > 0 水平翻转（沿Y轴翻转），
     // flipCode < 0 水平垂直翻转（先沿X轴翻转，再沿Y轴翻转，等价于旋转180°）
-    cv::flip(yuvimg, yuvimg, -1);
+//    cv::flip(yuvimg, yuvimg, -1);
 
     row_frame = yuvimg;
     preview_frame = row_frame.clone();
+
+    env->ReleaseByteArrayElements(yuv, _yuv, 0);
+}
+
+void processSystemCamera1(JNIEnv *env, jbyteArray &yuv) {
+    jbyte *_yuv = env->GetByteArrayElements(yuv, nullptr);
+
+    cv::Mat yuvimg(IMG_HEIGHT + IMG_HEIGHT / 2, IMG_WIDTH, CV_8UC1, (uchar *) _yuv);
+    cv::cvtColor(yuvimg, yuvimg, cv::COLOR_YUV420sp2BGR);
+
+    //flip图像旋转角度校准
+    cv::transpose(yuvimg, yuvimg);
+
+    // flipCode，翻转模式:
+    // flipCode == 0 垂直翻转（沿X轴翻转），
+    // flipCode > 0 水平翻转（沿Y轴翻转），
+    // flipCode < 0 水平垂直翻转（先沿X轴翻转，再沿Y轴翻转，等价于旋转180°）
+//    cv::flip(yuvimg, yuvimg, -1);
+
+    row_frame1 = yuvimg;
+    preview_frame1 = row_frame1.clone();
 
     env->ReleaseByteArrayElements(yuv, _yuv, 0);
 }
@@ -77,6 +98,11 @@ void processUsbCamera() {
 void pixelToBmp(JNIEnv *env, jobject &bitmap) {
     cv::cvtColor(preview_frame, preview_frame, cv::COLOR_BGR2BGR565);
     pixel2Bmp(env, bitmap, preview_frame.data, preview_frame.channels());
+}
+
+void pixelToBmp1(JNIEnv *env, jobject &bitmap) {
+    cv::cvtColor(preview_frame1, preview_frame1, cv::COLOR_BGR2BGR565);
+    pixel2Bmp(env, bitmap, preview_frame1.data, preview_frame1.channels());
 }
 
 void releaseSystemCamera() {

@@ -17,7 +17,8 @@ public class CameraProcessLib {
     public static native int prepareUsbCamera(int width, int height);
     
     public static native void processSystemCamera(byte[] data);
-    
+    public static native void processSystemCamera1(byte[] data);
+
     public static native void processUsbCamera();
     
     public static native void releaseSystemCamera();
@@ -25,5 +26,6 @@ public class CameraProcessLib {
     public static native void releaseUsbCamera();
     
     public static native void pixelToBmp(Bitmap bitmap);
-    
+    public static native void pixelToBmp1(Bitmap bitmap);
+
 }
