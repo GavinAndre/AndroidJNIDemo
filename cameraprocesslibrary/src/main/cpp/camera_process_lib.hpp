@@ -46,24 +46,28 @@ int prepareUsbCamera(int width, int height) {
 }
 
 void processSystemCamera(JNIEnv *env, jbyteArray &yuv) {
-    jbyte *_yuv = env->GetByteArrayElements(yuv, nullptr);
+    cv::Mat yuv_img;
+    if (yuv != nullptr) {
+        jbyte *_yuv = env->GetByteArrayElements(yuv, nullptr);
+        env->ReleaseByteArrayElements(yuv, _yuv, 0);
 
-    cv::Mat yuvimg(IMG_HEIGHT + IMG_HEIGHT / 2, IMG_WIDTH, CV_8UC1, (uchar *) _yuv);
-    cv::cvtColor(yuvimg, yuvimg, cv::COLOR_YUV420sp2BGR);
+        yuv_img = cv::Mat(IMG_HEIGHT + IMG_HEIGHT / 2, IMG_WIDTH, CV_8UC1, (uchar *) _yuv);
+        cv::cvtColor(yuv_img, yuv_img, cv::COLOR_YUV420sp2BGR);
 
-    //flip图像旋转角度校准
-    cv::transpose(yuvimg, yuvimg);
+        //flip图像旋转角度校准
+        cv::transpose(yuv_img, yuv_img);
 
-    // flipCode，翻转模式:
-    // flipCode == 0 垂直翻转（沿X轴翻转），
-    // flipCode > 0 水平翻转（沿Y轴翻转），
-    // flipCode < 0 水平垂直翻转（先沿X轴翻转，再沿Y轴翻转，等价于旋转180°）
-    cv::flip(yuvimg, yuvimg, -1);
-
-    row_frame = yuvimg;
+        // flipCode，翻转模式:
+        // flipCode == 0 垂直翻转（沿X轴翻转），
+        // flipCode > 0 水平翻转（沿Y轴翻转），
+        // flipCode < 0 水平垂直翻转（先沿X轴翻转，再沿Y轴翻转，等价于旋转180°）
+        cv::flip(yuv_img, yuv_img, -1);
+    } else {
+        yuv_img = cv::Mat(IMG_HEIGHT, IMG_WIDTH, CV_8UC3, cv::Scalar(0, 0, 0));
+    }
+    row_frame = yuv_img;
     preview_frame = row_frame.clone();
 
-    env->ReleaseByteArrayElements(yuv, _yuv, 0);
 }
 
 void processUsbCamera() {

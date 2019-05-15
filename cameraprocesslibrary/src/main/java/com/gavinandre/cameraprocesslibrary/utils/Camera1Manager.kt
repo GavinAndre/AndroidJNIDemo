@@ -83,16 +83,15 @@ object Camera1Manager {
             parameters.setRecordingHint(true)
             camera.parameters = parameters
 
+            // 设置回调的类
             //跟setPreviewCallback的工作方式一样，但是要求指定一个字节数组作为缓冲区，用于预览帧数据，
             //这样能够更好的管理预览帧数据时使用的内存。它一般搭配addCallbackBuffer方法使用
             //需要在startPreview()之前调用
             //camera.setPreviewCallback(new StreamIt(""));
             camera.setPreviewCallbackWithBuffer(StreamIt())
-            val byteSize =
-                parameters.previewSize.width * parameters.previewSize.height * ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8
-            preBuffer = ByteArray(byteSize)
-            camera.addCallbackBuffer(preBuffer)
-            // 设置回调的类
+            val byteSize = parameters.previewSize.width * parameters.previewSize.height *
+                    ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8
+            camera.addCallbackBuffer(ByteArray(byteSize))
 
             camera.startPreview() // 开始预览
             // camera.autoFocus(null); // 自动对焦
@@ -119,6 +118,7 @@ object Camera1Manager {
                 stopPreview()
                 release()
             }
+            preBuffer = null
             camera = null
         }
         isPreview = false
@@ -132,6 +132,7 @@ object Camera1Manager {
     internal class StreamIt : Camera.PreviewCallback {
 
         override fun onPreviewFrame(data: ByteArray, camera: Camera) {
+            preBuffer = data
             systemCameraFrame++
             camera.addCallbackBuffer(data)
         }
