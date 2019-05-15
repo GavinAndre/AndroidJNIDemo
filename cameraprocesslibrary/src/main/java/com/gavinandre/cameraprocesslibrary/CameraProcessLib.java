@@ -1,6 +1,8 @@
 package com.gavinandre.cameraprocesslibrary;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Created by gavinandre on 17-5-23.
@@ -16,8 +18,8 @@ public class CameraProcessLib {
     
     public static native int prepareUsbCamera(int width, int height);
     
-    public static native void processSystemCamera(byte[] data);
-    public static native void processSystemCamera1(byte[] data);
+    public static native void processSystemCamera(@Nullable byte[] data);
+    public static native void processSystemCamera1(@Nullable byte[] data);
 
     public static native void processUsbCamera();
     
@@ -25,7 +27,7 @@ public class CameraProcessLib {
     
     public static native void releaseUsbCamera();
     
-    public static native void pixelToBmp(Bitmap bitmap);
-    public static native void pixelToBmp1(Bitmap bitmap);
+    public static native void pixelToBmp(@NonNull Bitmap bitmap);
+    public static native void pixelToBmp1(@NonNull Bitmap bitmap);
 
 }

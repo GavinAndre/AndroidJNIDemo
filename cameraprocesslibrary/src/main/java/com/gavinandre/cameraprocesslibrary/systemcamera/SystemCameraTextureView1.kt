@@ -45,7 +45,7 @@ class SystemCameraTextureView1 : TextureView, TextureView.SurfaceTextureListener
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         //打开相机
-        Camera1Manager1.openCamera(0)
+        Camera1Manager1.openCamera(1)
         var ret = Camera1Manager1.setupCamera()
         if (ret == -1) {
             Toast.makeText(context, "摄像头初始化失败", Toast.LENGTH_SHORT).show()

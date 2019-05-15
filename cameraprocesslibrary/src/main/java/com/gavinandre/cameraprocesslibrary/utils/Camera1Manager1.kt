@@ -88,10 +88,9 @@ object Camera1Manager1 {
             //需要在startPreview()之前调用
             //camera.setPreviewCallback(new StreamIt(""));
             camera.setPreviewCallbackWithBuffer(StreamIt())
-            val byteSize =
-                parameters.previewSize.width * parameters.previewSize.height * ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8
-            preBuffer = ByteArray(byteSize)
-            camera.addCallbackBuffer(preBuffer)
+            val byteSize = parameters.previewSize.width * parameters.previewSize.height *
+                    ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8
+            camera.addCallbackBuffer(ByteArray(byteSize))
             // 设置回调的类
 
             camera.startPreview() // 开始预览
@@ -119,6 +118,7 @@ object Camera1Manager1 {
                 stopPreview()
                 release()
             }
+            preBuffer = null
             camera = null
         }
         isPreview = false
@@ -132,6 +132,7 @@ object Camera1Manager1 {
     internal class StreamIt : Camera.PreviewCallback {
 
         override fun onPreviewFrame(data: ByteArray, camera: Camera) {
+            preBuffer = data
             systemCameraFrame++
             camera.addCallbackBuffer(data)
         }
