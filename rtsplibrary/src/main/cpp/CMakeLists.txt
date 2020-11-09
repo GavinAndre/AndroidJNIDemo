@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.4.1)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 #设置jniLibs目录
-set(jniLibs "${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}")
+set(jniLibs "${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}")
 
 #ffmpeg
 add_library(avcodec-lib SHARED IMPORTED)
