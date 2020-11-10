@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.gavinandre.androidjnidemo">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.gavinandre.androidjnidemo">
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -13,14 +14,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".base.MyApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+            android:name=".base.MyApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +34,7 @@
         <activity android:name=".activity.SystemCameraActivity" />
         <activity android:name=".activity.MatBitmapConvertActivity" />
         <activity android:name=".activity.RtspActivity" />
+        <activity android:name=".activity.UvcCameraActivity" />
     </application>
 
 </manifest>

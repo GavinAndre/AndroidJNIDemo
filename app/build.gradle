@@ -61,4 +61,5 @@ dependencies {
     implementation project(path: ':imageprocesslibrary')
     implementation project(path: ':cameraprocesslibrary')
     implementation project(path: ':rtsplibrary')
+    implementation project(path: ':uvccameralibrary')
 }

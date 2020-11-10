@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         btnUsbCamera.setOnClickListener { startActivity(Intent(this, UsbCameraActivity::class.java)) }
         btnMatBitmapConvert.setOnClickListener { startMatBitmapConvertActivity() }
         btnRtsp.setOnClickListener { startActivity(Intent(this, RtspActivity::class.java)) }
+        btnUvcCamera.setOnClickListener { startActivity(Intent(this, UvcCameraActivity::class.java)) }
     }
 
     @AfterPermissionGranted(RC_CAMERA_PERM)

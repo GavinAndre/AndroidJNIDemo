@@ -1,63 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/btnNative"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="native"
-        app:layout_constraintBottom_toTopOf="@+id/btnSystemCamera"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+            android:id="@+id/btnNative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="native"
+            app:layout_constraintBottom_toTopOf="@+id/btnSystemCamera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-        android:id="@+id/btnSystemCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="系统摄像头"
-        app:layout_constraintBottom_toTopOf="@+id/btnUsbCamera"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnNative" />
+            android:id="@+id/btnSystemCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="系统摄像头"
+            app:layout_constraintBottom_toTopOf="@+id/btnUsbCamera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnNative" />
 
     <Button
-        android:id="@+id/btnUsbCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="USB摄像头"
-        app:layout_constraintBottom_toTopOf="@+id/btnMatBitmapConvert"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSystemCamera" />
+            android:id="@+id/btnUsbCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="USB摄像头"
+            app:layout_constraintBottom_toTopOf="@+id/btnUvcCamera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSystemCamera" />
 
     <Button
-        android:id="@+id/btnMatBitmapConvert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MatBitmap互转"
-        app:layout_constraintBottom_toTopOf="@+id/btnRtsp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnUsbCamera" />
+            android:id="@+id/btnMatBitmapConvert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MatBitmap互转"
+            app:layout_constraintBottom_toTopOf="@+id/btnRtsp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnUvcCamera" />
 
     <Button
-        android:id="@+id/btnRtsp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rtsp视频"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnMatBitmapConvert" />
+            android:id="@+id/btnRtsp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rtsp视频"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnMatBitmapConvert"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+            android:id="@+id/btnUvcCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UVC摄像头"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnUsbCamera"
+            app:layout_constraintBottom_toTopOf="@+id/btnMatBitmapConvert" />
 
 </android.support.constraint.ConstraintLayout>

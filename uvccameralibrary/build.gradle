@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.android["compileSdkVersion"]
+    buildToolsVersion rootProject.android["buildToolsVersion"]
+
+    defaultConfig {
+        minSdkVersion rootProject.android["minSdkVersion"]
+        targetSdkVersion rootProject.android["targetSdkVersion"]
+        versionCode rootProject.android["versionCode"]
+        versionName rootProject.android["versionName"]
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-frtti -fexceptions -std=c++11"
+            }
+        }
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation rootProject.ext.dependencies["support-v4"]
+}

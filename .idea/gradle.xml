@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/cameraprocesslibrary" />
             <option value="$PROJECT_DIR$/imageprocesslibrary" />
             <option value="$PROJECT_DIR$/rtsplibrary" />
+            <option value="$PROJECT_DIR$/uvccameralibrary" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
