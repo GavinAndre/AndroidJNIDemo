@@ -9,3 +9,9 @@
 [ndk实例总结补充：使用V4L2采集usb图像分析](https://blog.csdn.net/lj402159806/article/details/88027906)
 
 [ndk实例总结：使用fmpeg播放rtsp流](https://blog.csdn.net/lj402159806/article/details/88559575)
+
+[ndk实例总结：基于libuvc的双usbCamera处理](https://blog.csdn.net/lj402159806/article/details/109603176)
+
+[ndk实例总结补充：使用libuvc采集usb图像分析](https://blog.csdn.net/lj402159806/article/details/109614095)
+
+[ndk实例总结：jni日志存储](https://blog.csdn.net/lj402159806/article/details/109623728)
