@@ -5,29 +5,29 @@
 
 namespace jlog {
     namespace {
-        const static size_t K_bufLen = 2048;
-        static char l_buf[K_bufLen];
+        const static size_t buf_length = 2048;
+        static char log_buf[buf_length];
     }
-    static std::ofstream l_ofsLogFile;
-    static std::atomic_bool l_logMngLogEn{false};
+    static std::ofstream log_of_stream;
+    static std::atomic_bool save_log{false};
 
     static void logOutput(const std::string &s) {
-        if (!l_logMngLogEn) return;
+        if (!save_log) return;
 
         //---------------
         // M-Thread support
         //---------------
 #if NO_STD_THREAD
 #else
-        static std::mutex l_logMutex;
-        std::unique_lock<std::mutex> lock(l_logMutex);
+        static std::mutex log_mutex;
+        std::unique_lock<std::mutex> lock(log_mutex);
 #endif
         //------
         std::cout << s << std::endl;
         //---- Set log file
-        if (l_ofsLogFile.is_open()) {
-            l_ofsLogFile << (s + "\n");
-            l_ofsLogFile.flush();
+        if (log_of_stream.is_open()) {
+            log_of_stream << (s + "\n");
+            log_of_stream.flush();
         }
     }
 
@@ -68,7 +68,7 @@ namespace jlog {
     }
 
     extern bool initLog(const std::string &sFileLog) {
-        auto &ofs = l_ofsLogFile;
+        auto &ofs = log_of_stream;
         auto mode = std::ofstream::out;
         int append = true;
         if (append) mode |= std::ofstream::app;
@@ -77,13 +77,13 @@ namespace jlog {
             logFileErr(sFileLog);
             return false;
         }
-        l_logMngLogEn = true;
+        save_log = true;
         return true;
     }
 
     extern bool closeLog() {
-        l_logMngLogEn = true;
-        auto &ofs = l_ofsLogFile;
+        save_log = true;
+        auto &ofs = log_of_stream;
         ofs.close();
         return true;
     }
@@ -92,9 +92,9 @@ namespace jlog {
 #define  LOG_TAG    "jlog"
 
 #define LOG2BUF(...)  \
-    { std::snprintf(jlog::l_buf, 2048, __VA_ARGS__); }
+    { std::snprintf(jlog::log_buf, 2048, __VA_ARGS__); }
 #define BUF2FILE(FUNC) \
-    {FUNC(std::string(LOG_TAG)+":"+std::string(jlog::l_buf));}
+    {FUNC(std::string(LOG_TAG)+":"+std::string(jlog::log_buf));}
 
 #define _LOGV(...) { LOG2BUF(__VA_ARGS__); BUF2FILE(jlog::logVerbose); }
 #define _LOGD(...) { LOG2BUF(__VA_ARGS__); BUF2FILE(jlog::logDebug); }
