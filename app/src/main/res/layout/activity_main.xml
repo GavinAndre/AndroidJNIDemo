@@ -39,6 +39,17 @@
             app:layout_constraintTop_toBottomOf="@+id/btnSystemCamera" />
 
     <Button
+            android:id="@+id/btnUvcCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UVC摄像头"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnUsbCamera"
+            app:layout_constraintBottom_toTopOf="@+id/btnMatBitmapConvert" />
+
+    <Button
             android:id="@+id/btnMatBitmapConvert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,18 +68,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnMatBitmapConvert"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/btnJlog"
+            app:layout_constraintTop_toBottomOf="@+id/btnMatBitmapConvert" />
 
     <Button
-            android:id="@+id/btnUvcCamera"
+            android:id="@+id/btnJlog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UVC摄像头"
+            android:text="JNI日志"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnUsbCamera"
-            app:layout_constraintBottom_toTopOf="@+id/btnMatBitmapConvert" />
+            app:layout_constraintTop_toBottomOf="@+id/btnRtsp"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -35,6 +35,7 @@
         <activity android:name=".activity.MatBitmapConvertActivity" />
         <activity android:name=".activity.RtspActivity" />
         <activity android:name=".activity.UvcCameraActivity" />
+        <activity android:name=".activity.JLogActivity" />
     </application>
 
 </manifest>

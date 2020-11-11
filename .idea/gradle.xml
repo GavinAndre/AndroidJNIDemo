@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/cameraprocesslibrary" />
             <option value="$PROJECT_DIR$/imageprocesslibrary" />
+            <option value="$PROJECT_DIR$/nativeloglibrary" />
             <option value="$PROJECT_DIR$/rtsplibrary" />
             <option value="$PROJECT_DIR$/uvccameralibrary" />
           </set>

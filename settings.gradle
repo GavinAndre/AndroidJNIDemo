@@ -1,1 +1,1 @@
-include ':app', ':imageprocesslibrary', ':cameraprocesslibrary', ':rtsplibrary', ':uvccameralibrary'
+include ':app', ':imageprocesslibrary', ':cameraprocesslibrary', ':rtsplibrary', ':uvccameralibrary', ':nativeloglibrary'

@@ -15,7 +15,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     companion object {
         private val TAG = MainActivity::class.java.simpleName
         private const val RC_CAMERA_PERM = 123
-        private const val RC_STORAGE_PERM = 124
+        private const val RC_STORAGE_PERM1 = 124
+        private const val RC_STORAGE_PERM2 = 125
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         btnMatBitmapConvert.setOnClickListener { startMatBitmapConvertActivity() }
         btnRtsp.setOnClickListener { startActivity(Intent(this, RtspActivity::class.java)) }
         btnUvcCamera.setOnClickListener { startActivity(Intent(this, UvcCameraActivity::class.java)) }
+        btnJlog.setOnClickListener { startJLogActivity() }
     }
 
     @AfterPermissionGranted(RC_CAMERA_PERM)
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    @AfterPermissionGranted(RC_STORAGE_PERM)
+    @AfterPermissionGranted(RC_STORAGE_PERM1)
     private fun startMatBitmapConvertActivity() {
         if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             startActivity(Intent(this, MatBitmapConvertActivity::class.java))
@@ -55,7 +57,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             EasyPermissions.requestPermissions(
                 this,
                 "读写权限(用于读取和保存图片)",
-                RC_STORAGE_PERM,
+                    RC_STORAGE_PERM1,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        }
+    }
+
+    @AfterPermissionGranted(RC_STORAGE_PERM2)
+    private fun startJLogActivity() {
+        if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            startActivity(Intent(this, JLogActivity::class.java))
+        } else {
+            EasyPermissions.requestPermissions(
+                this,
+                "读写权限(用于读取和保存图片)",
+                RC_STORAGE_PERM2,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
