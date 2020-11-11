@@ -12,6 +12,13 @@ Java_com_gavinandre_nativeloglibrary_JLogLib_initLog(
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_gavinandre_nativeloglibrary_JLogLib_closeLog(
+        JNIEnv *env, jclass clazz) {
+    jlog::closeLog();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_gavinandre_nativeloglibrary_JLogLib_logFromJava(
         JNIEnv *env, jclass clazz, jstring string) {
     const char *c = env->GetStringUTFChars(string, JNI_FALSE);

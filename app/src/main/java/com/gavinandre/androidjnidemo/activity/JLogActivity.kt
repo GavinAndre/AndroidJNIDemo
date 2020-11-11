@@ -19,6 +19,11 @@ class JLogActivity : AppCompatActivity() {
         btn2.setOnClickListener { click2() }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        JLogLib.closeLog()
+    }
+
     private fun click1() {
         JLogLib.logFromJava("log from java")
     }

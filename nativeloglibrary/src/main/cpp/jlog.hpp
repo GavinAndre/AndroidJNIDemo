@@ -9,7 +9,7 @@ namespace jlog {
         static char l_buf[K_bufLen];
     }
     static std::ofstream l_ofsLogFile;
-    static std::atomic_bool l_logMngLogEn{true};
+    static std::atomic_bool l_logMngLogEn{false};
 
     static void logOutput(const std::string &s) {
         if (!l_logMngLogEn) return;
@@ -77,6 +77,14 @@ namespace jlog {
             logFileErr(sFileLog);
             return false;
         }
+        l_logMngLogEn = true;
+        return true;
+    }
+
+    extern bool closeLog() {
+        l_logMngLogEn = true;
+        auto &ofs = l_ofsLogFile;
+        ofs.close();
         return true;
     }
 }

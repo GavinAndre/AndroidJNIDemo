@@ -8,6 +8,8 @@ public class JLogLib {
 
     public static native void initLog(String logPath);
 
+    public static native void closeLog();
+
     public static native void logFromJava(String string);
 
     public static native void logFromNative();
